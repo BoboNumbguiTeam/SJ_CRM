@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!app_name</title>
+<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+<link rel="stylesheet" type="text/css" href="${base}/include/css/public/index.css"/>
+<script>
+$(function(){
+	$(".index_wlwz_table tr:even td").css("background-color","#f0f5fb")
+})
+</script>
+</head>
+<body>
+<div class="partinborder">
+<div class="wlwz_liTitle">
+    <ul>
+        <li class="first"><a class="on" id="wlwz_title_0" onmouseover="tabitem(this,5)" href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15" target="_blank">厅长信箱</a></li>
+        <li><a id="wlwz_title_1" onmouseover="tabitem(this,5)" href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15" target="_blank" >咨询</a></li>
+        <li><a id="wlwz_title_2" onmouseover="tabitem(this,5)" href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15" target="_blank">建议</a></li>
+        <li><a id="wlwz_title_3" onmouseover="tabitem(this,5)" href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15" target="_blank">投诉</a></li>
+        <li><a id="wlwz_title_4" onmouseover="tabitem(this,5)" href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15" target="_blank">举报</a></li>
+    </ul>
+    <div class="clear"></div>
+</div>
+<div class="wlwz_liContent">
+    <div id="wlwz_content_0">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;&nbsp;信件总数：<strong class="red">$!xxCount</strong> 已办：<strong class="red">$!xxYNum</strong> 未办：<strong class="red">$!xxWNum</strong></td>
+            <td width="110"><a href="${base}/public/toaddLetter?xz=50" target="_blank"><img src="${base}/images/public/wlwz_w1.gif" width="110" height="29" /></a></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="index_wlwz_table">
+        <tr>
+          <th>信件标题</th>
+          <th width="80">办结日期</th>
+        </tr>
+        #foreach($obj in $!xxList)
+        <tr align="center">
+          <td align="left" class="dotA"><a href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,26)</a></td>
+          <td>$obj.handletime</td>
+        </tr>
+        #end
+      </table>
+    </div>
+    <div id="wlwz_content_1" style="display:none;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;&nbsp;信件总数：<strong class="red">$!zxCount</strong> 已办：<strong class="red">$!zxYNum</strong> 未办：<strong class="red">$!zxWNum</strong></td>
+            <td width="110"><a href="${base}/public/toaddLetter?xz=45" target="_blank"><img src="${base}/images/public/wlwz_w2.gif" width="110" height="29" /></a></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="index_wlwz_table">
+        <tr>
+          <th>信件标题</th>
+          <th width="80">发布日期</th>
+        </tr>
+       #foreach($obj in $!zxList)
+        <tr align="center">
+          <td align="left" class="dotA"><a href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,26)</a></td>
+          <td>$obj.handletime</td>
+        </tr>
+        #end
+      </table>
+    </div>
+    <div id="wlwz_content_2" style="display:none;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;&nbsp;信件总数：<strong class="red">$!jyCount</strong> 已办：<strong class="red">$!jyYNum</strong> 未办：<strong class="red">$!jyWNum</strong></td>
+            <td width="110"><a href="${base}/public/toaddLetter?xz=46" target="_blank"><img src="${base}/images/public/wlwz_w3.gif" width="110" height="29" /></a></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="index_wlwz_table">
+          <tr>
+          <th>信件标题</th>
+          <th width="80">发布日期</th>
+        </tr>
+       #foreach($obj in $!jyList)
+        <tr align="center">
+          <td align="left" class="dotA"><a href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,26)</a></td>
+          <td>$obj.handletime</td>
+        </tr>
+        #end
+      </table>
+    </div>
+    <div id="wlwz_content_3" style="display:none;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;&nbsp;信件总数：<strong class="red">$!tsCount</strong> 已办：<strong class="red">$!tsYNum</strong> 未办：<strong class="red">$!tsWNum</strong></td>
+            <td width="110"><a href="${base}/public/toaddLetter?xz=51" target="_blank"><img src="${base}/images/public/wlwz_w4.gif" width="110" height="29" /></a></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="index_wlwz_table">
+         <tr>
+          <th>信件标题</th>
+          <th width="80">发布日期</th>
+        </tr>
+       #foreach($obj in $!tsList)
+        <tr align="center">
+          <td align="left" class="dotA"><a href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,26)</a></td>
+          <td>$obj.handletime</td>
+        </tr>
+        #end
+      </table>
+    </div>
+    <div id="wlwz_content_4" style="display:none;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;&nbsp;信件总数：<strong class="red">$!jbCount</strong> 已办：<strong class="red">$!jbYNum</strong> 未办：<strong class="red">$!jbWNum</strong></td>
+            <td width="110"><a href="${base}/public/toaddLetter?xz=47" target="_blank"><img src="${base}/images/public/wlwz_w5.gif" width="110" height="29" /></a></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="index_wlwz_table">
+         <tr>
+          <th>信件标题</th>
+          <th width="80">发布日期</th>
+        </tr>
+       #foreach($obj in $!jbList)
+        <tr align="center">
+          <td align="left" class="dotA"><a href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,26)</a></td>
+          <td>$obj.handletime</td>
+        </tr>
+        #end
+      </table>
+    </div>
+</div>              
+</div>
+</body>
+</html>

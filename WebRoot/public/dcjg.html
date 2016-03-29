@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script src="${base}/include/js/jquery.datagrid.js"></script>
+		<script type="text/javascript">
+	function totalsPic(totals, divid, numid, Bid) {
+		var totalcount = 0;//总票数
+		for ( var i = 0; i < totals.length - 1; i++) {
+			var k = parseInt(totals[i]);
+			totalcount += k;
+
+		}
+		if (totalcount == 0) {
+			totalcount = 1;//保障总票数不为0，为0的话那么除数为0了；
+		}
+		var temp = 100;
+		
+		for (i = 0; i < totals.length - 1; i++) {
+			This_Data = Math.round(100 * (totals[i] / totalcount));//算出当前投票数占总数的比列
+			if (i < totals.length - 2) {
+				temp -= This_Data;
+			} else {
+				temp -= This_Data;
+				This_Data += temp;
+			}
+
+			document.getElementById(divid[i]).style.width = This_Data + "%";//设置显示div宽度
+			document.getElementById(divid[i]).style.backgroundColor = "#66CCFF";//设置显示div背景
+			document.getElementById(numid[i]).innerHTML = totals[i] + "票";//投票人次
+			document.getElementById(Bid[i]).innerHTML = "("+This_Data + "%)";//投票百分比
+
+		}
+
+	}
+
+	function Show() {
+		//需要选项id和每个选项的票数和对应的题目 传过来的string格式 "题目id1，选项id1：选项id2，票数1：票数2#题目id2，选项id1：选项id2，票数1：票数2"
+		var info = $("#info").val();
+		var str = info.split("#");
+		var person=100000000;
+		for ( var j = 0; j < str.length - 1; j++) {
+			var str1 = str[j];
+			var str2 = str1.split(",");
+			var titleids = str2[0];
+			var optionids = str2[1];
+			var tatolses = str2[2];
+			//分割票数
+			var Group_Num = tatolses.split(":");//各个项投票数量	
+			//分割optionid
+			var ids = optionids.split(":");//各个id
+			var This_ID = new Array(ids.length);//柱状图形div的ID
+			var This_Num_ID = new Array(ids.length);//投票数量显示标签的ID
+			var This_B_ID = new Array(ids.length);//投票百分比显示标签的ID
+			for ( var i = 0; i < ids.length - 1; i++) {
+				var id = ids[i];
+				This_ID[i] = "P_" + id;
+				This_Num_ID[i] = "T_" + id;
+				This_B_ID[i] = "B_" + id;
+
+			}
+			totalsPic(Group_Num, This_ID, This_Num_ID, This_B_ID);
+			var totals=0;
+			for ( var i = 0; i < Group_Num.length - 1; i++) {
+			var k = parseInt(Group_Num[i]);
+			totals += k;
+		        }
+		        if(person>totals){
+		         person=totals;
+		        }
+             
+		}
+		$("#id222").html(person);//投票人次
+
+	}
+
+	window.onload = function This_Body()//页面加载完成执行
+	{
+		Show();
+	}
+</script>
+		<style type="text/css">
+.Div_A {
+	width: 250px;
+	height: 15px;
+	display: inline;
+	float: left;
+	margin-left: 0px;
+	margin-top: 0px;
+	background-color: #fff;
+	border: 1px solid #D7F1FF;
+}
+
+
+
+.Column {
+	height: 15px;
+	float: left;
+}
+</style>
+	</head>
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"
+		class="body">
+		<div style="width: 1000px; margin: 0px auto;">
+			<table width="1000" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td>
+						<img src="${base}/images/public/dcjg_2.jpg" width="1000" height="137"
+							border="0" usemap="#Map2" />
+					</td>
+				</tr>
+			</table>
+			<map name="Map" id="Map">
+				<area shape="rect" coords="50,2,64,15" href="#" />
+				<area shape="rect" coords="70,2,87,16" href="#" />
+				<area shape="rect" coords="90,1,105,16" href="#" />
+				<area shape="rect" coords="109,2,124,19" href="#" />
+				<area shape="rect" coords="128,0,146,18" href="#" />
+				<area shape="rect" coords="150,1,165,15" href="#" />
+				<area shape="rect" coords="170,0,185,15" href="#" />
+				<area shape="rect" coords="194,-1,211,16" href="#" />
+			</map>
+			<table width="1000" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="140" align="center">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="60" align="center" class="dcjg_36">
+									$!t_theme.title<input type="hidden" name="info" id="info" value="$!info" />
+								</td>
+							</tr>
+							<tr>
+								<td height="30" align="center" class="yjzj_14">
+									（本次问卷调查已有
+									<span class="zxft_14"  id="id222">1111111111</span> 名参与者)
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="dcjg_bg">
+						<table width="927" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+							 <td  style="background:url(../images/public/dcjg_4.jpg) repeat-x 0 50% ">&nbsp;</td>
+							</tr>
+
+						</table>
+						
+						#foreach($title in $!t_titles)
+						
+						<table class="margin_top12 margin_bottom30" width="825" border="0"
+							cellspacing="0" cellpadding="0">
+							<tr>
+								<td colspan="3" align="left" class="xqye_14">
+									<strong>$title.titleno、$title.content</strong>
+								</td>
+								
+							</tr>
+							
+							
+							#foreach($option in $title.t_onlinesurvey_option)
+							<tr>
+								<td width="388" align="left" class="xqye_14">
+									$option.optiontitle、$option.content
+								</td>
+								<td>
+									<table width="55%" border="0" cellpadding="0" cellspacing="0"
+										>
+										<tr>
+											<td height="8"><div class="Div_A">
+									
+										<div id="P_$!option.id" class="Column">
+										
+									</div>
+								</div></td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<span class="dcjg_12A" id="B_$!option.id"> </span><span class="dcjg_12" id="T_$!option.id"></span>
+								</td>
+							</tr>
+							#end
+							
+							
+						</table>
+						#end
+						
+						
+						
+						
+					</td>
+				</tr>
+			</table>
+			<map name="Map2" id="Map2">
+				<area shape="rect" coords="891,96,999,156"
+					href="${base}/public/wsdc" />
+			</map>
+		</div>
+	</body>
+</html>

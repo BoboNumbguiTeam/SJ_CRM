@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<!-- 框架 
+		<link href="${base}/include/css/default.css" rel="stylesheet"
+			type="text/css" />-->
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+	</head>
+	<body>
+		#parse("public/top.html")
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					您当前的位置：
+					<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/wsdc" >网上调查</a>
+				</div>
+			</div>
+			<div class="site_nr">
+				<table width="100%" border="0" align="center" cellpadding="0"
+					cellspacing="0">
+					<tr>
+						<td align="left" valign="top">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td height="207" align="center" valign="top" class="table">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="left">
+													<table width="205" height="32" border="0" cellpadding="0"
+														cellspacing="0">
+														<tr>
+															<td align="right"
+																background="${base}/images/public/wsdc_5.jpg">
+																<table width="160" border="0" cellspacing="0"
+																	cellpadding="0">
+																	<tr>
+																		<td align="left" class="wsdc_18">
+																			调查中
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+										<table width="96%" border="0" cellspacing="0" cellpadding="15">
+											<tr>
+
+												#foreach($theme in $!themes)
+											<td width="50%" style="padding: 15px;">
+												<table width="100%" border="0" cellspacing="0"
+													cellpadding="0">
+													<tr>
+														<td height="35" align="left">
+															<strong><span class="xqye_14">调查主题：</span>
+															</strong><a href="${base}/public/view?id=$theme.id"
+																target="_blank" class="blue"><strong>$!StringUtil.substr($theme.title,18)</strong>
+															</a>
+														</td>
+													</tr>
+													<tr>
+														<td height="35" align="left">
+															<strong><span class="xqye_14">开始时间：</span>
+															</strong><span class="wsdc_12">$theme.btime</span>
+														</td>
+													</tr>
+													<tr>
+														<td height="35" align="left">
+															<strong><span class="xqye_14">结束时间：</span>
+															</strong><span class="wsdc_12">$theme.etime</span>
+														</td>
+													</tr>
+													<tr>
+														<td height="35" align="left">
+															<a href="${base}/public/view?id=$theme.id"
+																target="_blank"><img
+																	src="${base}/images/public/wsdc_6.jpg" width="70"
+																	height="23" border="0" />
+															</a>
+														</td>
+													</tr>
+												</table>
+											</td>#end
+												
+												
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							<table class="margin_top12" width="100%" border="0"
+								cellspacing="0" cellpadding="0">
+								<tr>
+									<td height="260" align="center" valign="top" class="table">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="left">
+													<table width="205" height="32" border="0" cellpadding="0"
+														cellspacing="0">
+														<tr>
+															<td align="right"
+																background="${base}/images/public/wsdc_5.jpg">
+																<table width="160" border="0" cellspacing="0"
+																	cellpadding="0">
+																	<tr>
+																		<td align="left" class="wsdc_18">
+																			往期调查
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+										<table class="margin_top12" width="705" border="0"
+											cellspacing="0">
+											<tr>
+												<td width="480" height="34" align="left"
+													background="${base}/images/public/wsdc_7.jpg"
+													class="xqye_14">
+													<strong>&nbsp;调查主题</strong>
+												</td>
+												<td width="105" height="34" align="center"
+													background="${base}/images/public/wsdc_7.jpg">
+													<span class="xqye_14"><strong>关注度</strong>
+													</span>
+												</td>
+												<td width="114" align="center"
+													background="${base}/images/public/wsdc_7.jpg"
+													class="xqye_14">
+													<strong> 调查结果</strong>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3" align="center">
+													<table width="100%" border="0" cellspacing="0"
+														cellpadding="4" class="tabletdpad4">
+														#foreach($theme2 in $!themes2)
+													<tr>
+														<td width="495"  height="20" align="left">
+															<a href="${base}/public/view?id=$theme2.id" class="wsdc">·
+																$!StringUtil.substr($theme2.title,38)</a>
+														</td>
+														<td width="90" height="20" align="center" class="wsdc_12">
+															$!theme2.hotnum
+														</td>
+														<td width="114" align="center">
+															<a href="${base}/public/tocount?id=$theme2.id"
+																target="_blank"><font color="#FF0000"
+																style="font-size: 12px">[查看结果]</font>
+															</a>
+														</td>
+													</tr>
+													#end
+														
+
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="12" align="left" valign="top">
+							&nbsp;
+						</td>
+						<td height="479" align="right" valign="top" class="wsdc_bg">
+							<table border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td valign="top">
+										<table width="100%" border="0" cellspacing="0"
+											cellpadding="25">
+											<tr>
+												<td width="250" align="left" style="padding: 25px;">
+													为了更好的为公众提供参政议政的平台，体现政府联系群众的服务宗旨，更好的为城市建设服务，我们在网站上建立“网上调查”栏目，并定期发布调查主题，欢迎您围绕主题对安徽的发展提出宝贵意见建议，为建设好我们的共同家园贡献出一份力量。
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	#parse("public/foot.html")
+	</body>
+</html>

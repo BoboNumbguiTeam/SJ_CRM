@@ -1,0 +1,35 @@
+<div class="foot">
+	<div class="foot_text"></div>
+	<div class="foot_left"><a href="#">网站地图</a> | <a href="#">免责声明</a> |  <a href="#">联系我们</a> | <a href="#">在线信息报送</a> </div>
+  <div class="foot_right fontV">安徽省交通运输厅版权所有　地址:合肥市屯溪路528号金环大厦　电话：0551-63623561<br />
+  Email:xxzx@ahjt.gov.cn  Fax:0551-63623561  通用网址:安徽交通　　皖ICP备07007891号 </div>
+  <div class="clear"></div>
+</div>
+<div class="sitekf">
+	<ul>
+        <li><a class="kf_weibo" href="#"><span>微博</span></a></li>
+        <li><a class="kf_weixin" href="#"><span>微信</span></a></li>
+        <li><script src="http://221.130.129.139:8066/welive/welive_imagexjstx.php" language="javascript"></script><br/><span>即时交流</span></li>
+        <li id="gotopli"><a class="kf_gotop" href="#gotop"><span>返回顶端</span></a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+function b(){
+	h = $(window).height();
+	t = $(document).scrollTop();
+	if(t > h){
+		$('#gotopli').fadeIn('slow');
+	}else{
+		$('#gotopli').fadeOut('slow');
+	}
+}
+$(window).scroll(function(e){
+	b();		
+})
+$(document).ready(function(e) {		
+	b();
+	$('#gotopli').click(function(){
+		$(document).scrollTop(0);	
+	})
+});
+</script>

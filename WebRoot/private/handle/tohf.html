@@ -1,0 +1,692 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>$!app_name</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+		 <!-- 下拉模糊查询单选框 -->
+	<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet"
+		  type="text/css" />
+	<script src="${base}/include/js/main.js"></script>
+	<script src="${base}/include/js/string.js"></script>
+	<link href="${base}/include/css/themes/gray/easyui.css"
+		  rel="stylesheet" type="text/css" />
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>
+	<link rel="stylesheet" href="${base}/include/controls/flex/flexselect.css" type="text/css" media="screen" />
+    <script src="${base}/include/controls/flex/liquidmetal.js" type="text/javascript"></script>
+    <script src="${base}/include/controls/flex/jquery.flexselect.js" type="text/javascript"></script>
+		<script src="${base}/include/controls/my97/WdatePicker.js"></script>	
+	<script>
+		var submit = 0;
+		var blfs = 0;
+		function CheckIsRepeat() {
+			if (++submit > 1) {
+				return false;
+			}
+			return true;
+		}
+
+		function dosave(){
+			if(Verify.hasError()){
+				return;
+			}
+			if (!CheckIsRepeat()) {
+				Dialog.alert('请勿重复提交，本次提交操作将被忽略！');
+			} else {
+				if(blfs==0){
+					Dialog.alert("请选择回复操作！");
+					submit = 0;
+				}else{
+					if(blfs==1){
+						if($("#is_huifang").val()==1){
+							if(checkhufnote($("#hf_note").val())&&checkhfnote(document.form1.reply_note.value)){
+								if($("#hf_date").val()!=null&&$("#hf_date").val()!=''&&$("#hf_date").val()!=undefined){
+									gosubmit();
+								}else{
+									Dialog.alert("请输入回访时间！");
+									submit = 0;
+								}
+							}
+						}else{
+								gosubmit();
+						}
+					}else{
+						if(checkcbnote(document.form1.cb_note.value)&&checkmsgnote(document.form1.message_note.value)){
+							if($("#need_date").val()!=null&&$("#need_date").val()!=''&&$("#need_date").val()!=undefined){
+								if($("#zb_management").val()!="0"){
+									alert($("#zb_management").val());
+									gocb();
+								}else{
+									Dialog.alert("请选择转办物业！");
+									submit = 0;
+								}
+							}else{
+								Dialog.alert("请输入限办日期！");
+								submit = 0;
+							}
+						}
+					}
+				}
+				
+			}
+		}
+
+		function gosubmit(){
+			jQuery.ajax({
+				type: "POST",
+				url : "${base}/private/handle/dohf",
+				data : $("#form1").serialize(),
+				success : function (res) {
+
+					if(res=="true"){
+						Dialog.alert("回复成功！",function(){parent.opener.loadGrid();window.close();});
+
+					}else{
+						Dialog.alert("回复失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+		
+		function gocb(){
+			jQuery.ajax({
+				type: "POST",
+				url : "${base}/private/handle/docb",
+				data : $("#form1").serialize(),
+				success : function (res) {
+
+					if(res=="true"){
+						Dialog.alert("重办成功！",function(){parent.opener.loadGrid();window.close();});
+
+					}else{
+						Dialog.alert("重办失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+
+		//关闭此选项卡！
+		function closeThisTab(){
+			parent.closeNowTab();
+		}
+
+		#if ($res)
+			Page.onLoad(function(){
+				parent.closeMe("$!res", "Update");
+			});
+
+		#end
+	
+		function shbj(num){
+			if(num==1){
+				$("#hfjg").attr("style","display:block");
+				$("#fhcb").attr("style","display:none");
+				blfs=1;
+			}else{
+				$("#hfjg").attr("style","display:none");
+				$("#fhcb").attr("style","display:block");
+				blfs=2;
+			}
+		}
+		
+	function checkhfnote(value){
+	if(value!=undefined && value!='null' && value.trim()!=''){
+		if(value.length>2000){
+			Dialog.alert("回复内容不能超过2000字！");
+			submit=0;
+			return false;
+		}
+		return true;
+	}else{
+		Dialog.alert("回复内容不能为空");
+		submit=0;
+	return false;
+	}
+}
+
+	function checkmsgnote(value){
+	if(value!=undefined && value!='null' && value.trim()!=''){
+		if(value.length>500){
+			Dialog.alert("短信内容不能超过500字！");
+			submit=0;
+			return false;
+		}
+		return true;
+	}else{
+		Dialog.alert("短信内容不能为空");
+		submit=0;
+	return false;
+	}
+}
+
+	function checkhufnote(value){
+	if(value!=undefined && value!='null' && value.trim()!=''){
+		if(value.length>2000){
+			Dialog.alert("回访内容不能超过2000字！");
+			submit=0;
+			return false;
+		}
+		return true;
+	}else{
+		Dialog.alert("回访内容不能为空");
+		submit=0;
+	return false;
+	}
+}
+
+	function checkcbnote(value){
+	if(value!=undefined && value!='null' && value.trim()!=''){
+		if(value.length>2000){
+			Dialog.alert("重办内容不能超过2000字！");
+			submit=0;
+			return false;
+		}
+		return true;
+	}else{
+		Dialog.alert("重办内容不能为空");
+		submit=0;
+	return false;
+	}
+}
+
+
+            $(document).ready(function() {
+       // $("select.special-flexselect").flexselect({ hideDropdownOnEmptyInput: true });
+        $("select.flexselect").flexselect(); 
+      });
+	</script>
+</head>
+<body leftmargin="0" topmargin="0" class="easyui-layout">
+<form name='form1' id="form1" method='post'
+	  action="${base}/private/handle/dohf">
+	<input type="hidden" name="id" id="id" value="$!obj.id">
+	<input type="hidden" name="is_huifang" id="is_huifang" value="$!is_huifang">
+	<div region="center" border="false"
+		 style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					基本信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right" nowrap>
+								来电类型：
+							</td>
+							<td width="140">
+									#if($!obj.phone_type)
+										$!ptHT.get("$!obj.phone_type")
+									#end
+							</td>
+							<td width="80" align="right" nowrap>
+								服务事项：
+							</td>
+							<td width="140">
+								#if($!obj.repairs_type)
+										$!sxHT.get("$!obj.phone_type$!obj.repairs_type")
+								#end
+							</td>
+							<td width="80" align="right" nowrap>
+								登记员：
+							</td>
+							<td colspan="3" height="25" colspan="2" align="left" class="font12">
+								$!obj.loginname
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					客户信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								客户姓名：
+							</td>
+							<td width="140">
+										<span class="font12">
+											$!obj.fromname
+										</span>
+							</td>
+							<td width="80" align="right">
+								联系电话：
+							</td>
+							<td width="140">
+										<span class="font12">
+											$!obj.phone
+										</span>
+							</td>
+							<td width="80" align="right">
+								是否回访：
+							</td>
+							<td height="25" colspan="4" align="left" bgcolor="#FFFFFF"
+								class="font12">
+								#if($obj.ishuifang==0)
+								需要回访
+								#else
+								无需回访
+								#end
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					内容描述
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								标题：
+							</td>
+							<td>
+								<$!obj.title
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								内容：
+							</td>
+							<td>
+								$!obj.note
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					转办描述
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk" id="zhuanban_tab">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								派工标准：
+							</td>
+							<td width="380">
+							#if($!zhuanban.seed_type==1)
+								应急派工
+							#else
+								预约派工
+							#end
+							</td>
+							<td width="80" align="right">
+								应完成时间：
+							</td>
+							<td>
+								$!zhuanban.need_date
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								转办内容：
+							</td>
+							<td>
+								$!zhuanban.zb_note
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#if($!cbList.size()>0)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					重办描述
+				</td>
+			</tr>
+		</table>
+		#foreach($obj in $!cbList)
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk" id="zhuanban_tab">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								重办处理时间：
+							</td>
+							<td width="380">
+							$!obj.get(0)
+							</td>
+							<td width="80" align="right">
+								重办处理人：
+							</td>
+							<td>
+								$!obj.get(2)
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								重办原因：
+							</td>
+							<td>
+								$!obj.get(1)
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		#end
+		#foreach($obj in $!hisHandle)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					历史处理结果
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理人：
+							</td>
+							<td>
+								$!obj.get(4)
+							</td>
+							<td width="80" align="right" valign="top">
+								处理时间：
+							</td>
+							<td>
+								$!obj.get(2)
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								承办小区：
+							</td>
+							<td colspan="3">
+								#if($!obj.get(6))
+									$!unitHT.get("$!obj.get(6)")
+								#end
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理内容：
+							</td>
+							<td colspan="3">
+								$!obj.get(3)
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		#if($!handle)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					处理结果
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理人：
+							</td>
+							<td>
+								$!handle.reply_user
+							</td>
+							<td width="80" align="right" valign="top">
+								处理时间：
+							</td>
+							<td>
+								$!handle.reply_date
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								承办小区：
+							</td>
+							<td colspan="3">
+								#if($!handle.unitid)
+									$!unitHT.get("$!handle.unitid")
+								#end
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理内容：
+							</td>
+							<td colspan="3">
+								$!handle.reply_note
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								回复操作：
+							</td>
+							<td colspan="3">
+								<input type="radio" name="bj"
+														value="1" onclick="shbj(1)">
+								同意关闭 &nbsp;&nbsp;
+								<input type="radio" name="bj"
+														value="2" onclick="shbj(2)">
+								发回重办
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<div id="hfjg" style="display:none;">
+		#if($!obj.is_huifang==1)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					回访结果
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								回访人：
+							</td>
+							<td>
+								$!curuser
+							</td>
+							<td width="80" align="right" valign="top">
+								回访时间：
+							</td>
+							<td>
+								<input id="hf_date" name="mgt_callback.hf_date" type="text" size="12" onfocus="WdatePicker({el:$dp.$('hf_date')})"/>
+								<img onclick="WdatePicker({el:$dp.$('hf_date')})" src="${base}/include/img/data.jpg" width="14" height="11" align="absmiddle">
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								回访满意度：
+							</td>
+							<td colspan="3">
+								<input type="radio" name="mgt_callback.hf_pleased" value="0" checked/>满意 &nbsp;&nbsp;
+								<input type="radio" name="mgt_callback.hf_pleased" value="1" />基本满意&nbsp;&nbsp;
+								<input type="radio" name="mgt_callback.hf_pleased" value="2" />不满意
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								回访内容：
+							</td>
+							<td colspan="3">
+								<textarea id="hf_note" name="mgt_callback.hf_note" style="width: 700px; height: 80px;" onChange="checkhufnote(this.value)"  ></textarea>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								备注：
+							</td>
+							<td colspan="3">
+								<textarea name="mgt_callback.remark" style="width: 700px; height: 80px;"></textarea>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		</div>
+		<div id="fhcb" style="display:none;">
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					发回重办
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+					<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								限办日期：
+							</td>
+							<td>
+								<input id="need_date" name="need_date" type="text" size="12" onfocus="WdatePicker({el:$dp.$('need_date')})"/>
+								<img onclick="WdatePicker({el:$dp.$('need_date')})" src="${base}/include/img/data.jpg" width="14" height="11" align="absmiddle">
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								转办物业：
+							</td>
+							<td>
+							<select  class="flexselect" name="zb_management" id="zb_management">
+								<option value="0">-- 请选择 --</option>
+							#foreach($obj in $!unitList)
+       	 						<option value="$!obj.get(0)">$!obj.get(1)</option>
+       	 					#end
+							</select>	
+   							 <script type="text/javascript">selected(form1.zb_management, '$!zhuanban.zb_management');</script>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								重办原因：
+							</td>
+							<td colspan="3">
+								<textarea name="cb_note" style="width: 700px; height: 80px;" onChange="checkcbnote(this.value)"  ></textarea>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								接收号码：
+							</td>
+							<td colspan="3">
+								<input id="tel" name="tel" type="text" size="12" value="$!tel"/>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								短信内容：
+							</td>
+							<td  colspan="3">
+								<textarea name="message_note" style="width: 700px; height: 40px;"  id="message_note" onChange="checkmsgnote(this.value)" ></textarea>
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		</div>
+	</div>
+	<div region="south" border="false" style="overflow: hidden; padding: 10px 10px 0px 10px">
+		<table width="98%" border="0" cellspacing="0" cellpadding="0" class="table_auto tcck_foot margin_top10">
+			<tr>
+				<td align="center">
+					<input class="button" type="button" name="btnOk" value="确 定" onclick="dosave();" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>
+</body>
+</html>

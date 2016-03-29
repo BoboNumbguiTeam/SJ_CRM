@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:auto">
+	<head>
+		<title>新增公告</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type='text/javascript'>
+			var CONTEXTPATH = '${base}';
+			var stylePath = '$!stylename';
+		</script>
+		<!-- 框架 -->
+		<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet"
+			type="text/css" />
+		<link href="${base}/include/controls/my97/skin/WdatePicker.css" rel="stylesheet" type="text/css"/>
+	    <script src="${base}/include/js/main.js"></script>
+	    <script src="${base}/include/js/string.js"></script>
+	    <script language="javascript" type="text/javascript" src="${base}/include/controls/my97/WdatePicker.js"></script>
+	    <!-- 网页编辑器ueditor  -->
+	    <script type="text/javascript" charset="utf-8" src="${base}/ueditor/ueditor.config.js"></script>
+	    <script type="text/javascript" charset="utf-8" src="${base}/ueditor/ueditor.all.js"></script>
+	    <script type="text/javascript" charset="utf-8" src="${base}/ueditor/lang/zh-cn/zh-cn.js"></script>
+	    <script type="text/javascript" charset="utf-8">	
+	        $(document).ready(function(){         // 解决IE浏览器兼容问题
+	            var editor = new UE.ui.Editor();
+	            editor.render("myEditor");
+	        }) ;
+	        function setNote(){
+	            var arr = new Array();
+	            arr.push(UE.getEditor('myEditor').getContent());
+	            if(arr!=null && arr.join()!=""){
+	            	document.form1.note.value=arr;
+	            	$("#note").val(arr);
+		            return true;
+	            }else{
+					return false;
+		        }
+	        }
+	    </script>
+		<!-- /网页编辑器 -->
+	</head>
+	<body>
+		<script type="text/javascript">
+	function SelectAllUser(){
+		if(document.form1.ckuser.checked){
+			reloadAlluser();
+		}else{
+			$("#groupusers").val('');
+		}
+	}
+	
+    function dosave(){
+    	if (isValidValue(document.form1.title, "标题")) {
+            if (isValidValue(document.form1.fileno, "字号")) {
+                var i = document.form1.groupusers.value.length;
+	 			if(i == 0){
+                   	Dialog.alert("请选择接收用户");
+	 				return;
+	 			}
+	 			if(setNote()){
+	                if (document.form1.commit.value == "0") {
+	                    //alert(1);
+	                    document.form1.commit.value = "1";
+	                    document.form1.target = "_Sub_RMenu";
+	                    var url = "";
+	                    $.ajax({
+	                    	url:"${base}/private/msg/msgInfo/add",
+	                    	data:$("#myform").serialize(),
+	                    	type:'post',
+	                    	contentType:"application/x-www-form-urlencoded;charset=UTF-8",
+	                    	success:function(result){
+	                    		if(result=='true'){
+	                    			Dialog.alert("增加成功",function(){
+	                    				window.opener.loadGrid();
+		                    			window.close();
+		                    		});
+	                    		}else{
+	                    			Dialog.alert("增加失败",function(){
+	                    				window.opener.loadGrid();
+		                    			window.close();
+		                    		});
+	                    		}
+	                    	},
+	                    	fail:function(e){
+	                    		Dialog.alert(e);
+	                    	}
+	                    });
+	                } else {
+	                    Dialog.alert("正在提交，请稍候！");
+	                }
+	 			}else{
+	 				Dialog.alert("请填写通告内容");
+	 			}
+            }
+        }
+    }
+    //选择用户
+    function selectUser(){      
+        var seleceduser=$("#groupusers").val();
+        var selecedId="?checkeduser="+seleceduser;
+        var urltmep="${base}/private/sys/user/selectUser"+selecedId;
+    	var d = new Dialog("Add");
+        d.Width = 600;
+        d.Height = 300;
+        d.Title = "选择用户";
+        d.URL = urltmep,
+        d.OKEvent = function(){
+        	confirmUser();
+        };    	    		
+        d.show();
+    } 
+    //确认用户
+    function confirmUser(){
+    	var id_array=new Array();
+		$DW.$("input[name='checkUser']:checked").each(function(){
+			id_array.push($(this).val());//向数组中添加元素
+		});
+		var idstr = id_array.join(',');//将数组元素连接起来以构建一个字符串
+		var url1 = "${base}/private/sys/user/getUser?idstr="+idstr;
+		$.ajax({
+			url:url1,
+			success:function(result){
+				var str = eval(result);
+				var str1 = "";
+				var str2 = "";
+				for(var i = 0;i<str.length;i++){
+					str1 += str[i].realname+"-"+str[i].loginname+";";
+					str2 += str[i].loginname+" ";
+				}
+				$("#groupusers").val(str1);
+				$("#ext2").val(str2);
+			},
+			fail:function(e){
+				alert(e);
+			}
+		});
+		$D.close();
+    }
+    //附件
+    function selectUpload(){
+        var d = new Dialog("Add");
+            d.Width = 400;
+            d.Height = 125;
+            d.Title = "文件上传";
+            d.URL = "${base}/private/file/uploadOne",
+            d.OKEvent = function(){
+               	addUpload();
+            };    	    		
+            d.show();
+    }
+   	
+    function addUpload() {
+    	var filename = $DW.$("#filename").val();
+		var filepath = $DW.$("#filepath").val();
+		$("#filename").val(filename);
+		$("#filepath").val(filepath);
+		var filename2 = $("#filename2");
+		$_html = "<option>"+filename+"</option>";
+		filename2.append($_html);
+		$D.close();
+    }
+	
+	function delout(){
+		var selectedUser = document.form1.fjmu;
+		for (var i = selectedUser.length - 1; i >= 0; i--){
+			if (selectedUser[i].selected == true)
+				selectedUser.remove(i);
+		}
+		document.form1.fjstr.value = "";
+		for (var i = 0; i < selectedUser.length ; i++){
+			document.form1.fjstr.value = document.form1.fjstr.value + "<a href=\""+ selectedUser[i].value +"\" target=\"_blank\"><font color=\"red\">" + selectedUser[i].text + "</font></a><br>";
+		}
+	}
+	//加载全部用户
+    function reloadAlluser(){
+	    var url1 = '${base}/private/sys/user/ajaxAllUsers';
+	    jQuery.ajax({
+	    	url:url1,
+	    	success : function(result){
+	    		var str = eval(result);
+				var str1 = "";
+				var str2 = "";
+				for(var i = 0;i<str.length;i++){
+					str1 += str[i].realname+"-"+str[i].loginname+";";
+					str2 += str[i].loginname+" ";
+				}
+				$("#groupusers").val(str1);
+				$("#ext2").val(str2);
+	    	},
+	    	fail:function(e){
+	    		Dialog.alert("系统发生错误！");
+	    	}
+	    });
+	}
+</script>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto ">
+			<tr valign="top">
+				<td class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td >
+								<form id="myform" name='form1' method='post'
+									action="${base}/private/msg/msgInfo/add">
+									<input type="hidden" name="doAction" value="add">
+									<input type="hidden" name="sys_menuid" value="$!sys_menuid">
+									<input type="hidden" name="msginfo.infostate" value="1">
+									<input type="hidden" name="msginfo.infotype" value="$!infotype">
+									<input type="hidden" name="commit" id="commit" value="0">
+									<input type="hidden" name="msginfo.content" id="note" value="">
+									<table>
+										<tr>
+											<td height="20px">
+												<!-- --------------------------------title  content----------------------------->
+												<table width="100%" height="100%" border="0" cellpadding="0"
+													cellspacing="0">
+													<tr>
+														<td height="30px" style="padding-left: 10">
+															&nbsp;
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+
+										<tr>
+											<td>
+												<!-- ------------------------------------data content---------------------------- -->
+												<table width="100%" 
+													cellpadding="0" cellspacing="0" >
+													<tr>
+														<td>
+															<table>
+																<tr  style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC">
+																	<td width="120" align="right">
+																		标&nbsp;&nbsp;&nbsp;&nbsp; 题：
+																	</td>
+																	<td width="200">
+																		&nbsp;<input type="text" name="title" maxlength="50"
+																			size="30" verify="标题|NotNull">
+																	</td>
+																	<td width="120" align="right">
+																		发布单位：
+																	</td>
+																	<td align="left" width="200">
+																		&nbsp;<input type="hidden" name="msginfo.unitid"
+																			maxlength="100" value="$!unitid">
+																		$unitname
+																	</td>
+
+																</tr>
+																<tr style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC">
+																	<td width="120" align="right">
+																		副&nbsp;标&nbsp;题：
+																	</td>
+																	<td width="200">
+																		&nbsp;<input type="text" name="msginfo.subtitle"
+																			maxlength="100" size="30">
+																	</td>
+																	<td width="120" align="right">
+																		发&nbsp;布&nbsp;人：
+																	</td>
+																	<td align="left" width="200">
+																		&nbsp;<input type="hidden" name="msguser.flogin"
+																			maxlength="100" value="$!flogin">
+																		<!-- $!userhs.get($!flogin) -->
+																		$!flogin
+																	</td>
+																</tr>
+																<tr style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC">
+																	<td width="120" align="right">
+																		字&nbsp;&nbsp;&nbsp;&nbsp;号：
+																	</td>
+																	<td width="200">
+																		&nbsp;<input type="text" name="fileno" maxlength="100"
+																			size="30" verify="字号|NotNull">
+																	</td>
+																	<td width="120" align="right">
+																		发布日期：
+																	</td>
+																	<td align="left" width="200">
+																		&nbsp;<input readonly type="text" id="bdate"
+																			name="msginfo.ctime" maxlength="50" size="20"
+																			value="$!nowDate" onClick="WdatePicker( {el : 'bdate'});">&nbsp;<img src="${base}/include/img/data.jpg" onClick="WdatePicker( {el : 'bdate'});"/>
+																	</td>
+																</tr>
+																<tr style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC" valign="top">
+																	<td width="120" align="right">
+																		接&nbsp;收&nbsp;人：
+																	</td>
+																	<td valign="bottom"
+																		style="vertical-align: bottom; padding-bottom: 0px">
+																		<table>
+																			<tr>
+																				<td style="padding: 0">
+																					<textarea readonly
+																						style="width: 320px; height: 60px;"
+																						id="groupusers" name="msguser.jlogin"
+																						maxlength="1000" verify="接收人|NotNull"></textarea>
+																					<input type="hidden" id="ext2" name="msginfo.ext2" />
+																					<br/>
+																					<a href='javascript:void(0);' ztype='zPushBtn'
+																						class='zPushBtn' hidefocus='true' tabindex='-1'
+																						onselectstart='return false'
+																						onClick="selectUser();"> <b>&nbsp;选择&nbsp;</b>
+																					</a> #if($!flogin=='superadmin')
+																					<input type="checkbox" onClick="SelectAllUser();" name="ckuser" />
+																					全部用户 #end
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																	<td width="120" align="right">
+																		附&nbsp;&nbsp;&nbsp;&nbsp; 件：
+																	</td>
+																	<td>
+																		<input type="hidden" id="filepath" name="fjurl"
+																			value="" />
+																		<input type="hidden" id="filename" name="fjmc"
+																			maxlength="100" />
+																		<table>
+																			<tr>
+																				<td>
+																					<select id="filename2" name='fjmu'
+																						style='width: 350px;height: 65px;' multiple size="3"
+																						class="Noprint">
+																					</select>
+																					<br/>
+																					<a href='javascript:void(0);' ztype='zPushBtn'
+																						class='zPushBtn' hidefocus='true' tabindex='-1'
+																						onselectstart='return false'
+																						onClick="selectUpload();"> <b>&nbsp;添加&nbsp;</b>
+																					</a>
+																					<a href='javascript:void(0);' ztype='zPushBtn'
+																						class='zPushBtn' hidefocus='true' tabindex='-1'
+																						onselectstart='return false' onClick="delout();">
+																						<b>&nbsp;删除&nbsp;</b> </a>
+																				</td>
+																			</tr>
+																		</table>
+																	</td>
+																</tr>
+																<tr style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC">
+																	
+																</tr>
+																<tr style1="backgroundcolor:#FEFEFE"
+																	style2="backgroundcolor:#F9FBFC">
+																	<td width="120" align="right">
+																		内&nbsp;&nbsp;&nbsp;&nbsp; 容：
+																	</td>
+																	<td width="900" colspan="3">
+																		<div style="z-index: -1;"><textarea id="myEditor"
+																			style="width: 100%; height: 290px;" name="note"></textarea></div>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</form>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table_auto tcck_foot margin_top10">
+			<tr>
+				<td>
+												<!-- <a href='javascript:void(0);' ztype='zPushBtn'
+													class='zPushBtn' hidefocus='true' tabindex='-1'
+													onselectstart='return false' id='BtnAdd' onClick="dosave()">
+													<img src="${base}/images/icons/icon022a16.gif" width="20"
+														height="20" /><b>提交&nbsp;</b>
+												</a> -->
+														<input class="button" type="button" name="Submit" onClick="dosave()"  value="提交" />
+														<input class="button" type="button" name="Submit2" onClick="window.close();" value="取消" />
+												<!-- <a href='javascript:void(0);' ztype='zPushBtn'
+													class='zPushBtn' hidefocus='true' tabindex='-1'
+													onselectstart='return false' onClick="window.close();">
+													<img src="${base}/images/icons/icon022a7.gif" width="20"
+														height="20" /> <b>取消&nbsp;</b>
+												</a>-->
+				</td>
+			</tr>
+		</table>
+	</body>
+	<iframe id='_Sub_RMenu' name="_Sub_RMenu" frameborder="0" width="0"
+		height="0" src='about:blank' scrolling="auto"></iframe>
+</html>

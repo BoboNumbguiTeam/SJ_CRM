@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html >
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>知识浏览</title>
+		<link rel="stylesheet" type="text/css"
+			href="${base}/include/css/$!stylename/style.css" />
+		<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+	</head>
+
+	<body class="easyui-layout">
+
+		<div region="center" border="false"
+			style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+
+			<table width="98%" border="0" align="center" cellpadding="0"
+				cellspacing="0" class="table_auto margin_top15 table_titlebk">
+				<tr>
+					<td class="table_title" align="center">
+						基本信息$!obj.title
+					</td>
+				</tr>
+			</table>
+			<table width="98%" border="0" align="center" cellpadding="0"
+				cellspacing="0" class="table_auto margin_top15">
+				<tr>
+					<td align="center">
+						文号：$!dateNo - $!obj.id&nbsp;&nbsp;&nbsp;&nbsp;发文单位：$!unit&nbsp;&nbsp;&nbsp;&nbsp;发文时间：$obj.sbdate
+					</td>
+				</tr>
+			</table>
+			<table width="98%" border="0" align="center" cellpadding="0"
+				cellspacing="0" class="table_auto margin_top15">
+				<tr>
+					<td >
+						$!obj.note
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div region="south" border="false"
+			style="overflow: hidden; padding: 10px 10px 0px 10px">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				class="table_auto tcck_foot margin_top10" id="noPrint_mood">
+				<tr>
+					<td align="center">
+						<input class="button" type="button" name="btnOk" value="关闭"
+							onclick="window.close();" />
+						<input class="button" type="button" name="btnCancal" value="打印"
+							onClick="window.print();" />
+					</td>
+				</tr>
+			</table>
+		</div>
+
+
+	</body>
+</html>

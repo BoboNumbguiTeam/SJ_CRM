@@ -1,0 +1,541 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<!-- 框架 
+		<link href="${base}/include/css/default.css" rel="stylesheet"
+			type="text/css" />-->
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link rel="stylesheet" type="text/css"
+			href="${base}/include/css/public/wlwz.css" />
+		<script>
+	$(function() {
+		$(".index_wlwz_table tr:even td").css("background", "#f0f5fb")
+	})
+</script>
+		<script type="text/javascript">
+	function setStr() {
+		var typedate = document.getElementById("typedate").value;
+		document.getElementById("typedate").value = htmlEncode(JTrim(typedate));
+	}
+	//查询
+	function searchLetter() {
+		setStr();
+		if ($("#typedate").val() == "") {
+			Dialog.alert("搜索条件不能为空！");
+			return false;
+		} else {
+			var type = $("#type").val();
+			var typedate2 = $("#typedate").val();
+			var xz = $("#xz").val();
+
+			window.open("${base}/public/searchLetter?xz=" + xz + "&type="
+					+ type + "&typedate=" + typedate2, "_self", "");
+		}
+	}
+</script>
+	</head>
+	<body>
+		#parse("public/top.html")
+
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					您当前的位置：
+					<a href="http://220.178.59.114:8099/" class="wsdc">首页</a> -&gt;
+					<a href="${base}/public" class="wsdc">网络问政</a>
+				</div>
+			</div>
+			<div class="part site_nr">
+				<div class="wlwz_hfxd ">
+					<div class="wlwz_search">
+						<form name='form2' id="form2" method='post'>
+							<table border="0" cellspacing="0" cellpadding="0" height="46">
+								<tr>
+									<td width="80" align="center">
+										回复查询
+									</td>
+									<td width="110">
+										<select name="type" id="type">
+											<option value="1">
+												信件查询码
+											</option>
+											<option value="2">
+												标题
+											</option>
+										</select>
+									</td>
+									<td width="160">
+										<input type="text" name="typedate" id="typedate"
+											style="width: 155px;" maxlength="50" />
+									</td>
+									<td width="75" align="center">
+										信件分类
+									</td>
+									<td width="90">
+										<select name="xz" id="xz">
+											<option value="50">
+												厅长信箱
+											</option>
+											<option value="45">
+												咨询
+											</option>
+											<option value="46">
+												建言献策
+											</option>
+											<option value="51">
+												投诉
+											</option>
+											<option value="47">
+												举报
+											</option>
+										</select>
+									</td>
+									<td width="90">
+										<input type="button" class="btn_search"
+											onclick=
+	searchLetter();;
+value="查询" />
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					<div class="wlwz_hfxd_title">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="120" align="center" bgcolor="#0077C9" class="font18">
+									<font color="#FFFFFF">回复选登</font>
+								</td>
+								<td height="34" background="${base}/images/public/lb01.jpg">
+									<span class="morediv"><a
+										href="${base}/public/listLetter?crPage=$!count&pageSize=15"
+										target="_blank" class="more">[进入更多]</a> </span>
+								</td>
+								<td width="5">
+									<img src="${base}/images/public/lb02.jpg" width="5" height="34" />
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="wlwz_hfxd_content">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0"
+							class="wlwz_hfxd_table">
+							<tr>
+								<th width="120" align="center">
+									信件编号
+								</th>
+								<th>
+									信件标题
+								</th>
+								<th width="150" align="center">
+									办理单位
+								</th>
+								<th width="60" align="center">
+									人气
+								</th>
+								<th width="90" align="center">
+									回复时间
+								</th>
+							</tr>
+
+							#foreach($obj in $!letterList)
+							<tr align="center">
+								<td>
+									$obj.id
+								</td>
+								<td align="left">
+									<span class="overdot"><a
+										href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,25)</a>
+									</span>
+								</td>
+								<td align="center" class="dwname" width="150">
+									$obj.handleunit
+								</td>
+								<td align="center" width="60">
+									$obj.djl
+								</td>
+								<td align="center" width="90">
+									$obj.handletime
+								</td>
+							</tr>
+							#end
+
+
+
+
+						</table>
+					</div>
+				</div>
+				<div class="wlwz_writelink partborder">
+					<table width="240" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="46" valign="bottom">
+								<img src="${base}/images/public/wlwz_title_2.gif" width="246"
+									height="34" />
+							</td>
+						</tr>
+					</table>
+					<table width="203" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="51" colspan="2" align="center" valign="bottom">
+								<a href="${base}/public/toaddLetter?xz=50"><img
+										src="${base}/images/public/wlwz_wr_1.gif" width="203"
+										height="41" /> </a>
+							</td>
+						</tr>
+						<tr>
+							<td height="68" align="left" valign="bottom">
+								<a href="${base}/public/toaddLetter?xz=45"><img
+										src="${base}/images/public/wlwz_wr_2.gif" width="98"
+										height="61" /> </a>
+							</td>
+							<td align="right" valign="bottom">
+								<a href="${base}/public/toaddLetter?xz=46"><img
+										src="${base}/images/public/wlwz_wr_3.gif" width="98"
+										height="61" /> </a>
+							</td>
+						</tr>
+						<tr>
+							<td height="68" align="left" valign="bottom">
+								<a href="${base}/public/toaddLetter?xz=51"><img
+										src="${base}/images/public/wlwz_wr_4.gif" alt="" width="98"
+										height="61" /> </a>
+							</td>
+							<td align="right" valign="bottom">
+								<a href="${base}/public/toaddLetter?xz=47"><img
+										src="${base}/images/public/wlwz_wr_5.gif" alt="" width="98"
+										height="61" /> </a>
+							</td>
+						</tr>
+						<tr>
+							<td height="69" colspan="2" align="center" valign="bottom">
+								<script
+									src="http://220.130.129.139:8066/welive/welive_imagejstx.php"
+									language="javascript"></script>
+							</td>
+						</tr>
+					</table>
+					<table width="240" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="54" valign="bottom">
+								<img src="${base}/images/public/wlwz_title_3.gif" width="240"
+									height="34" />
+							</td>
+						</tr>
+					</table>
+					<table width="216" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="66" valign="bottom">
+								<img src="${base}/images/public/wlwz_wr_7.gif" width="216"
+									height="56" />
+							</td>
+						</tr>
+					</table>
+					<table width="240" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="50" valign="bottom">
+								<img src="${base}/images/public/wlwz_title_4.gif" width="246"
+									height="34" />
+							</td>
+						</tr>
+					</table>
+					<table width="220" border="0" align="center" cellpadding="0"
+						cellspacing="0">
+						<tr>
+							<td height="34" align="center" valign="bottom">
+								<a class="weiboA" href="#">加关注</a>
+							</td>
+							<td align="center" valign="bottom">
+								<a class="weiboA" href="#">发私信</a>
+							</td>
+							<td align="center" valign="bottom">
+								<a class="weiboA" href="#">推荐给好友</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="site_nr">
+				<div class="partM partborder">
+					<div class="borderT">
+						<div class="zxft_1">
+							<div class="zxft_title">
+								<h2></h2>
+								<a class="on" href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15" target="_blank">本期访谈</a>
+								<a href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15" target="_blank">年度访谈计划</a>
+							</div>
+							<div class="zxft_content">
+								#foreach($obj in $!intering)
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="278">
+											<div class="partinborder padding5">
+												<img src="${base}$obj.titleimg" width="266" height="178" />
+											</div>
+										</td>
+										<td valign="top">
+											<table width="100%" border="0" cellspacing="0"
+												cellpadding="0">
+												<tr>
+													<th width="70" height="25" align="right">
+														主题：
+													</th>
+													<td>
+														<a class="blue" target="_blank"
+															href="${base}/public/xqye?id=$obj.id&status=$obj.status" title="$obj.theme"><strong>$!StringUtil.substr($obj.theme,20)</strong>
+														</a>
+													</td>
+												</tr>
+												<tr>
+													<th height="25" align="right">
+														嘉宾：
+													</th>
+													<td>
+														$!StringUtil.substr($obj.guets,20)
+													</td>
+												</tr>
+												<tr>
+													<th height="25" align="right">
+														时间：
+													</th>
+													<td>
+														$obj.time
+													</td>
+												</tr>
+												<tr>
+													<th height="95" align="right" valign="top">
+														摘要：
+													</th>
+													<td>
+														$!StringUtil.substr($obj.summary,110)
+													</td>
+												</tr>
+												<tr>
+													<td height="25" align="right">
+														&nbsp;
+													</td>
+													<td align="right">
+														<a class="zxft_more" href="${base}/public/xqye?id=$obj.id">进入直播</a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+								#end
+							</div>
+						</div>
+						<div class="zxft_2">
+							<div class="zxft_ftyg">
+								<div class="zxft_title">
+									<strong>访谈预告</strong>
+								</div>
+							</div>
+							<div class="zxft_ftyg_content">
+								#foreach($obj in $!inter)
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<th width="50" height="25" align="right">
+											主题：
+										</th>
+										<td>
+											$!StringUtil.substr($obj.theme,17)
+										</td>
+									</tr>
+									<tr>
+										<th height="25" align="right">
+											嘉宾：
+										</th>
+										<td>
+											$!StringUtil.substr($obj.guets,19)
+										</td>
+									</tr>
+									<tr>
+										<th height="25" align="right">
+											时间：
+										</th>
+										<td>
+											$obj.time
+										</td>
+									</tr>
+								</table>
+								#end
+							</div>
+							<div class="zxft_ftyg">
+								<div class="zxft_title">
+									<strong>访谈回顾</strong><span class="morediv"><a
+										href="${base}/public/listZXFT?status=3&crPage=1&pageSize=15" target="_blank" class="more">[进入更多]</a> </span>
+								</div>
+							</div>
+							<div class="zxft_fthg_content">
+								<ul>
+									#foreach($obj in $!intered)
+								
+								<li>
+									<a href="${base}/public/xqye?id=$obj.id&status=$obj.status" target="_blank" title="$obj.theme">$!StringUtil.substr($obj.theme,25)</a>
+								</li>
+								
+								#end
+								</ul>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+
+				<div class="partM partborder">
+					<div class="borderT">
+						<div class="wlwz_yjzj">
+							<div class="yjzj_title">
+								<h2></h2>
+								<span class="morediv"><a href="${base}/public/jyzj"
+								target="_blank" class="more">[进入更多]</a>
+							</span>
+							</div>
+							<div class="yjzj_content">
+								<ul>
+									#foreach($obj in $!t_solicitations)
+								<li>
+									<a href="${base}/public/XQdetail?id=$obj.id" title="$obj.title">$!StringUtil.substr($obj.title,25)</a>
+								</li>
+								#end
+								</ul>
+							</div>
+						</div>
+						<div class="wlwz_wsdc">
+							<div class="wsdc_title">
+								<h2></h2>
+								<span class="morediv"><a href="${base}/public/wsdc"
+								target="_blank" class="more">[进入更多]</a>
+							</span>
+							</div>
+							<div class="wsdc_content">
+								<ul>
+									#foreach($obj in $!themes)
+								<li>
+									<a href="${base}/public/view?id=$obj.id" title="$obj.title">$!StringUtil.substr($obj.title,25)</a>
+								</li>
+								#end
+								</ul>
+							</div>
+						</div>
+						<div class="wlwz_mykp">
+							<div class="mykp_title">
+								<h2></h2>
+							</div>
+							<div class="mykp_content">
+								<ul>
+									#foreach($obj in $!listPM)
+								<li>
+									$!StringUtil.substr($obj.name,25)
+								</li>
+								#end
+								</ul>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+			<div class="paddingBorder0 padding8">
+				<div class="wlwz_sltj_title"></div>
+				<div class="wlwz_sltj_content">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0"
+						class="wlwz_sltj_table" height="94">
+						<tr>
+							<th>
+								&nbsp;
+							</th>
+							<th>
+								厅长信箱
+							</th>
+							<th>
+								咨询数
+							</th>
+							<th>
+								建议数
+							</th>
+							<th>
+								投诉数
+							</th>
+							<th>
+								举报数
+							</th>
+							<th>
+								合计
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<strong>总 数</strong>
+							</td>
+							<td>
+								$!tzCount
+							</td>
+							<td>
+								$!zxCount
+							</td>
+							<td>
+								$!xcCount
+							</td>
+							<td>
+								$!tsCount
+							</td>
+							<td>
+								$!jbCount
+							</td>
+							<td>
+								<strong class="red">$!countNum</strong>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<strong>已办结</strong>
+							</td>
+							<td>
+								$!tzCount1
+							</td>
+							<td>
+								$!zxCount1
+							</td>
+							<td>
+								$!xcCount1
+							</td>
+							<td>
+								$!tsCount1
+							</td>
+							<td>
+								$!jbCount1
+							</td>
+							<td>
+								<strong class="red">$!countNum1</strong>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		#parse("public/foot.html")
+
+	</body>
+</html>

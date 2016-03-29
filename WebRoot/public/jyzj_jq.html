@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<!-- 框架 
+		<link href="${base}/include/css/default.css" rel="stylesheet"
+			type="text/css" />-->
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+		<script>
+	function nextPage(startNum) {
+		startNum = startNum + 5;
+		window.open("${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage="
+				+ startNum + "&pageSize=10&startNum=" + startNum, "_self", "");
+	}
+	function prePage(startNum) {
+		startNum = startNum - 5;
+		window.open("${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage="
+				+ startNum + "&pageSize=10&startNum=" + startNum, "_self", "");
+	}
+	function countPage(count) {
+		var startNum = 1;
+		if (count % 5) {
+			startNum = (Math.floor(count / 5) - 1) * 5 + 1;
+		} else {
+			startNum = Math.floor(count / 5) * 5 + 1;
+		}
+		window.open("${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage="
+				+ count + "&pageSize=10&startNum=" + startNum, "_self", "");
+	}
+</script>
+
+	</head>
+	<body>
+		#parse("public/top.html")
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					您当前的位置：
+					<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/jyzj" >意见征集</a>
+				</div>
+			</div>
+			<div class="site_nr">
+				<table width="100%" border="0" cellspacing="0">
+					<tr>
+						<td align="center">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td height="60" align="center" class="xqye_24">
+										$!t_sonlicitation.title #if($!nowstatus==1)
+										<img src="../images/public/yjzj_2a.jpg" width="70" height="25"
+											align="absmiddle" />
+										#else
+										<img src="${base}/images/public/yjzj_2.jpg" width="71"
+											height="25" align="absmiddle" />
+										#end
+									</td>
+								</tr>
+								<tr>
+									<td height="30" align="center" valign="top">
+										<span class="yjzj_14">征集时间：$!t_sonlicitation.btime至$!t_sonlicitation.etime</span>
+										<input type="hidden" name="id" id="id"
+											value="$!t_sonlicitation.id" />
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<table class="table margin_bottom10" width="98%" border="0"
+								cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="center" valign="top" bgcolor="#FFFFFF">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td width="112" align="center" class="yjzj">
+													<a href="${base}/public/XQdetail?id=$!t_sonlicitation.id"
+														class="yjzj">征集内容</a>
+												</td>
+												<td width="112" align="center" class="yjzj">
+													<a
+														href="${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage=1&pageSize=10"
+														class="yjzjon">结果公示</a>
+												</td>
+												<td height="29" class="yjzj_l3">
+													&nbsp;
+												</td>
+											</tr>
+										</table>
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="center" valign="top">
+													<table width="96%" border="0" cellpadding="0"
+														cellspacing="1" bgcolor="#DCDCDC"
+														class="margin_top25 margin_bottom30">
+
+														#foreach($obj in $!hfList)
+														<tr>
+															<td bgcolor="#FFFFFF">
+																<table width="100%" border="0" cellspacing="0"
+																	cellpadding="0">
+																	<tr>
+																		<td height="33" align="center" bgcolor="#F0F0F0"
+																			class="zxft_12wz">
+																			<table width="97%" border="0" cellspacing="0"
+																				cellpadding="0">
+																				<tr>
+																					<td align="left">
+																						网友
+																						<span class="yjzj_12blue">$obj.username</span> 发表：
+																					</td>
+																					<td width="115" align="left" class="zxft_12wz">
+																						$obj.time
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td align="left" class="zxft_12wz padding10">
+																			$obj.note
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+														#end
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							<div class="pageation">
+								<span class="pagetotle">共$!count页</span>
+								<span class="home"><a
+									href="${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage=1&pageSize=10&startNum=1">首页</a>
+								</span>
+								<span class="pagenum"> #if($!startNum - 5 lt 0) #else <a
+									href="javascript:void(0);" onclick="prePage($!startNum);">&lt;</a>
+									#end #foreach($foo in [$!startNum..$!count]) #set ($option =
+									$velocityCount + $!startNum - 1) #if($velocityCount lt 6)
+									#if($option==$!crPage) <a
+									href="${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage=$!crPage&pageSize=10&startNum=$!startNum"
+									class="this">$!crPage</a> #else <a
+									href="${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage=$option&pageSize=10&startNum=$!startNum">$option</a>
+									#end #end #end #if($!startNum + 5 gt $!count) #else <a
+									href="javascript:void(0);" onclick="nextPage($!startNum);">&gt;</a>
+									#end </span>
+								<span class="end"><a href="javascript:void(0);"
+									onclick="countPage($!count);">尾页</a> </span>
+								<span class="gopage">转到 <select id="select1"
+										onchange="setonchange()">
+										#foreach($foo in [1..$!count])
+										<option value="$velocityCount">
+											$velocityCount
+										</option>
+										#end
+									</select> 页</span>
+								<script>
+	function setonchange() {
+		if ($("#select1").val()!= "")
+		var crPage=$("#select1").val();
+			
+		var startNum=1;
+			if(crPage%5==0){
+				startNum=(Math.floor(crPage/5)-1)*5+1;
+			}else{
+				startNum=Math.floor(crPage/5)*5+1;
+			}
+			window.open("${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage="+crPage+"&pageSize=10&startNum="+startNum,  "_self","");
+	}
+</script>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+#parse("public/foot.html")
+	</body>
+</html>

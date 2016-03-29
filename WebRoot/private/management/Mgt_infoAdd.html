@@ -1,0 +1,585 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>$!app_name</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+	<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet"
+		  type="text/css" />
+	<script src="${base}/include/js/main.js"></script>
+	<script src="${base}/include/js/string.js"></script>
+	<link href="${base}/include/css/themes/gray/easyui.css"
+		  rel="stylesheet" type="text/css" />
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>
+	<script>
+		var submit = 0;
+		function CheckIsRepeat() {
+			if (submit > 1) {
+				return false;
+			}
+			return true;
+		}
+
+		function dosave(){
+			if(Verify.hasError()){
+				return;
+			}
+			var linktel=form1.link_tel.value;
+			if(form1.fromname.value==''){
+				Dialog.alert('用户姓名不可为空！');
+				return;
+			}
+			if (linktel != '') {
+				if (form1.note.value == '') {
+					Dialog.alert("内容不可为空！");
+				} else {
+					if (!CheckIsRepeat()) {
+						Dialog.alert('请勿重复提交，本次提交操作将被忽略！');
+					} else {
+						gosubmit();
+					}
+				}
+			}
+		}
+
+		function gosubmit(){
+			jQuery.ajax({
+				type: "POST",
+				url : "${base}/private/management/info/add",
+				data : $("#form1").serialize(),
+				success : function (res) {
+					if(res=="true"){
+						Dialog.alert("保存成功！",function(){
+							//window.parent.opener.loadGrid();
+							submit++;
+							window.close();
+						});
+					}else{
+						Dialog.alert("保存失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+
+		//关闭此选项卡！
+		function closeThisTab(){
+			parent.closeNowTab();
+		}
+
+		#if ($res)
+			Page.onLoad(function(){
+				parent.closeMe("$!res", "Update");
+			});
+
+		#end
+
+		function setOperation(){
+			var ssfl = $("#phone_type  option:selected").val();
+			if(ssfl == 0 ){
+				$("#repairs_type option").remove();
+				$("#repairs_type").append("<option value='0' >--请选择--</option>");
+				return;
+			}
+			jQuery.ajax({
+				url : "${base}/private/management/info/getOperation?ssfl="+ssfl,
+				success : function (res) {
+					var operationList = eval("("+res+")");//转换为json对象
+					var len = operationList.length;
+					$("#repairs_type option").remove();
+					if(len == 0){
+						$("#repairs_type").append("<option value='0' >尚未定义操作项</option>");
+					}else {
+						for (var i = 0; i < len; i++) {
+							$("#repairs_type").append("<option value='" + operationList[i].f_vc_daimz1 + "' >" + operationList[i].f_vc_daimmc + "</option>");
+						}
+					}
+				}
+			});
+		}
+
+		Page.onLoad(function() {
+
+		});
+
+
+		var xmlHttp;
+		var completeDiv;
+		var inputField;
+		var nameTable;
+		var nameTableBody;
+
+		function createXMLHttpRequest()
+		{
+			if(window.XMLHttpRequest)
+			{
+				xmlHttp=new XMLHttpRequest();
+
+				if(xmlHttp.overrideMimeType)
+				{
+					xmlHttp.overrideMimeType("text/xml");
+				}
+			}
+			else if(window.ActiveXObject)
+			{
+				try
+				{
+					xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+				}
+				catch(e)
+				{
+					xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+			}
+			if(!xmlHttp)
+			{
+				window.alert("你的浏览器不支持创建XMLhttpRequest对象");
+			}
+		}
+
+		function initVars() {
+			inputField = document.getElementById("zb_management");
+			nameTable = document.getElementById("name_table");
+			completeDiv = document.getElementById("popup");
+			nameTableBody = document.getElementById("name_table_body");
+		}
+
+		function findNames() {
+			initVars();
+			if (inputField.value.length > 0) {
+				createXMLHttpRequest();
+				var url = "${base}/private/management/info/doGet";
+				jQuery.ajax({
+					type: 'POST',
+					url: url,
+					data:{names:$("#zb_management").val()},
+					success: function (res) {
+						setNames(res);
+					},
+					fail: function (res) {
+						Dialog.alert("系统错误!");
+					}
+				});
+			} else {
+				clearNames();
+			}
+		}
+
+		function callback() {
+			if (xmlHttp.readyState == 4) {
+				alert("status : "+xmlHttp.status);
+				if (xmlHttp.status == 200) {
+					var name = xmlHttp.responseXML.getElementsByTagName("name")[0].firstChild.data;
+					setNames(xmlHttp.responseXML.getElementsByTagName("name"));
+				} else if (xmlHttp.status == 204){//204代表服务器没有发送任何信息，这时可以清空下拉区
+					clearNames();
+				}
+			}
+		}
+
+		function setNames(the_names) {
+			clearNames();
+			var names = eval(the_names);
+			var size = names.length;
+			setOffsets();
+
+			var row, cell, txtNode;
+			for (var i = 0; i < size; i++) {
+				var nextNode = names[i].name;
+				row = document.createElement("tr");
+				cell = document.createElement("td");
+
+				cell.onmouseout = function() {this.className='mouseOver';};
+				cell.onmouseover = function() {this.className='mouseOut';};
+				cell.setAttribute("bgcolor", "#FFFAFA");
+				cell.setAttribute("border", "0");
+				cell.onclick = function() { populateName(this); } ;
+
+				txtNode = document.createTextNode(nextNode);
+				cell.appendChild(txtNode);
+				row.appendChild(cell);
+				nameTableBody.appendChild(row);
+			}
+		}
+
+		function setOffsets() {
+			var end = inputField.offsetWidth;
+			var left = calculateOffsetLeft(inputField);
+			var top = calculateOffsetTop(inputField) + inputField.offsetHeight;
+
+			completeDiv.style.border = "black 1px solid";
+			completeDiv.style.left = left + "px";
+			completeDiv.style.top = 98 + "px";
+			nameTable.style.width = end + "px";
+		}
+
+		function calculateOffsetLeft(field) {
+			return calculateOffset(field, "offsetLeft");
+		}
+
+		function calculateOffsetTop(field) {
+			return calculateOffset(field, "offsetTop");
+		}
+
+		function calculateOffset(field, attr) {
+			var offset = 0;
+			while(field) {
+				offset += field[attr];
+				field = field.offsetParent;
+			}
+			return offset;
+		}
+
+		function populateName(cell) {
+			inputField.value = cell.firstChild.nodeValue;
+			clearNames();
+		}
+
+		function clearNames() {
+			var ind = nameTableBody.childNodes.length;
+			for (var i = ind - 1; i >= 0 ; i--) {
+				nameTableBody.removeChild(nameTableBody.childNodes[i]);
+			}
+			completeDiv.style.border = "none";
+		}
+
+		function checkSourceName(){
+			var name = $("#zb_management").val();
+			jQuery.ajax({
+				type: 'POST',
+				url : "${base}/private/management/info/checkSourceName" ,
+				data : {"name":name},
+				success : function (res) {
+					if(res=="true"){
+						addName();
+					}else{
+						Dialog.alert("<p style='text-align:center;'>该小区\""+name+"\"已存在！<br />请勿重复添加！</p>");
+					}
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误!");
+				}
+			});
+		}
+
+		function addName(){
+			Dialog.confirm( "是否添加小区信息？",function(){
+				var name = $("#zb_management").val();
+				jQuery.ajax({
+					type: 'POST',
+					url : "${base}/private/management/info/addSource" ,
+					data : {"name":name},
+					success : function (res) {
+						if(res=="true"){
+							Dialog.alert("<p style='text-align:center;'>小区\""+name+"\"已添加！请尽快完善小区物业信息</p>");
+						}else{
+							Dialog.alert("<p style='text-align:center;'>小区\""+name+"\"添加失败！<br />请重新添加！</p>");
+						}
+						return false;
+					},
+					fail : function(res) {
+						Dialog.alert("系统错误!");
+					}
+				});
+			}) ;
+		}
+		
+		function detail(id){
+			var url='${base}/private/management/info/detail?id='+id;
+			showw = window.open(url,'受理件查看', 'status=yes,toolbar=no,menubar=no,resizable=yes,scrollbars=yes,location=no,width=900,height=800');
+		}
+	</script>
+</head>
+<body leftmargin="0" topmargin="0" class="easyui-layout">
+<form name='form1' id="form1" method='post'
+	  action="${base}/private/slzx/slj_info/add">
+	<input type="hidden" name="id" id="id" value="$!obj.id">
+	<input type="hidden" name="flowid" id="flowid" value="$!flowid">
+	<input type="hidden" name="fromnum" id="fromnum" value="$!fromnum">
+	<input type="hidden" name="phone" id="phone" value="$!fromnum">
+	<input type="hidden" name="fromtime" id="fromtime" value="$!fromtime">
+	<input type="hidden" name="loginname" id="loginname" value="$!user.loginname">
+	<div region="center" border="false"
+		 style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+		 #if($!hisList.size()>0)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					历史来电信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"  cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="center" nowrap>
+								工单编号
+							</td>
+							<td width="80" align="center">
+								来电人姓名
+							</td>
+							<td width="80" align="center" nowrap>
+								来电时间
+							</td>
+							<td width="80" align="center" nowrap>
+								来电号码
+							</td>
+							<td width="80" align="center" nowrap>
+								标题
+							</td>
+							<td width="80" align="center" nowrap>
+								操作
+							</td>
+						</tr>
+						#foreach($obj in $!hisList)
+						<tr bgcolor="#ffffff">
+							<td width="80" align="center" nowrap>
+								$!obj.id
+							</td>
+							<td width="80" align="center">
+								$!obj.fromname
+							</td>
+							<td width="80" align="center" nowrap>
+								$!obj.fromtime
+							</td>
+							<td width="80" align="center" nowrap>
+								$!obj.fromnum
+							</td>
+							<td width="80" align="center" nowrap>
+								$!obj.title
+							</td>
+							<td width="80" align="center" nowrap>
+								<a href="javascript:void(0)" onclick="detail($!obj.id)">查看</a>
+							</td>
+						</tr>
+						#end
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					来电信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"  cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right" nowrap>
+								流水号：
+							</td>
+							<td width="140">
+								$!flowid
+							</td>
+							<td width="80" align="right">
+								所属小区：
+							</td>
+							<td>
+								<input type="text" name="zb_management" id="zb_management" value="$!ssxq"  maxlength="40" size="20" onkeyup="findNames();" onblur="WY();" />
+								<div style="position:absolute;" id="popup">
+									<table id="name_table" bgcolor="#FFFAFA" border="0" cellspacing="0" cellpadding="0" >
+										<tbody id="name_table_body"></tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" nowrap>
+								来电号码：
+							</td>
+							<td>
+								$!fromnum
+							</td>
+							<td width="80" align="right" nowrap>
+								来电时间：
+							</td>
+							<td>
+								$!fromtime
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					基本信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right" nowrap>
+								来电类型：
+							</td>
+							<td width="140">
+								<select name="phone_type" id="phone_type" onchange="setOperation();">
+									#foreach($obj in $!dmjflList)
+									<option value="$!obj.flbh">
+										$!obj.flmc
+									</option>
+									#end
+								</select>
+							</td>
+							<td width="80" align="right" nowrap>
+								服务事项：
+							</td>
+							<td width="140">
+								<select name="repairs_type" id="repairs_type" width="100">
+									#foreach($obj in $!daimjbList)
+									<option value="$!obj.f_vc_daimz1">
+										$!obj.f_vc_daimmc
+									</option>
+									#end
+								</select>
+							</td>
+							<td width="80" align="right" nowrap>
+								登记员：
+							</td>
+							<td colspan="3" height="25" colspan="2" align="left" class="font12">
+								$!user.realname
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					客户信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								客户姓名：
+							</td>
+							<td width="140">
+										<span class="font12"> <input type="text" name="fromname"
+																	 style="width: 75px;" maxlength="20" verify="客户姓名|NotNull" />
+										</span>
+							</td>
+							<td width="80" align="right">
+								联系电话：
+							</td>
+							<td width="140">
+										<span class="font12"> <input type="text" name="link_tel" value="$!fromnum"
+																	 maxlength="50" style="width: 105px;" verify="联系号码|NotNull" />
+										</span>
+							</td>
+							<td width="80" align="right">
+								需要回访：
+							</td>
+							<td height="25" colspan="4" align="left" bgcolor="#FFFFFF"
+								class="font12">
+										<span class="font12">
+											<select name="is_huifang">
+												<option value="0">
+													否
+												</option>
+												<option value="1" selected="selected">
+													是
+												</option>
+											</select>
+										</span>
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								详细住址：
+							</td>
+							<td>
+								<input type="text" name="addressArr" style="width: 32px;" maxlength="40" value=""  />栋&nbsp;
+								<input type="text" name="addressArr" style="width: 32px;" maxlength="40" value="" />单元&nbsp;
+								<input type="text" name="addressArr" style="width: 32px;" maxlength="40"  value="" />房号
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					内容描述
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								标题：
+							</td>
+							<td>
+								<input type="text" name="title" maxlength="20" style="width: 300px;" verify="标题|NotNull">
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								内容：
+							</td>
+							<td>
+								<textarea name="note" style="width: 500px; height: 100px;" verify="内容|NotNull"></textarea>
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div region="south" border="false"
+		 style="overflow: hidden; padding: 10px 10px 0px 10px">
+		<table width="98%" border="0" cellspacing="0" cellpadding="0"
+			   class="table_auto tcck_foot margin_top10">
+			<tr>
+				<td align="center">
+					<input class="button" type="button" name="btnOk" value="确定"
+						   onclick="dosave()" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>
+</body>
+</html>

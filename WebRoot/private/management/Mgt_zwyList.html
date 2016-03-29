@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>$!app_name</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- 框架 -->
+	<link rel="stylesheet" type="text/css"
+		  href="${base}/include/css/$!stylename/style.css" />
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+	<script src="${base}/include/js/main.js"></script>
+	<script src="${base}/include/js/string.js"></script>
+	<!-- 分页  注意顺序 -->
+	<link href="${base}/include/css/themes/gray/easyui.css"
+		  rel="stylesheet" type="text/css" />
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>
+	<!-- 日期控件  -->
+	<script type="text/javascript" src="${base}/include/controls/my97/WdatePicker.js"></script>
+	<link rel="stylesheet" href="${base}/include/controls/my97/skin/WdatePicker.css" type="text/css">
+	<SCRIPT type="text/javascript">
+		<!--
+
+		var typeMap=getCustomeMap('$!typemap');
+		var serverMap=getCustomeMap('$!servermap');
+		var managementMap=getCustomeMap('$!managementmap');
+		var lightMap=getCustomeMap('$!lightMap');
+
+		function initButton(){
+			Page.initBtn();
+			$!initBtn
+		}
+		function getWidth(percent){
+			return document.body.clientWidth*percent;
+		}
+		function loadGrid(){
+			var SearchUserName=Page.getValue("SearchUserName");
+			$("#dg1").datagrid({
+				width:"auto",
+				height:"auto",
+				nowrap: true,
+				striped: true,
+				border: true,
+				collapsible:false,//是否可折叠的
+				fit: true,//自动大小
+				url:"${base}/private/management/info/zwylist",
+				//sortName: 'code',
+				//sortOrder: 'desc',
+				queryParams: {"keyId": $("#keyId").val(), "searchType": $("#searchType").val(), "searchServer": $("#searchServer").val(),
+					"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"zb_type":$("#zb_type").val(),"fromnum":$("#fromnum").val()},
+				remoteSort:false,
+				idField:"id",
+				singleSelect:false,//是否单选
+				pagination:true,//分页控件
+				rownumbers:true,//行号
+				fitColumns: true,//行自适应
+				pageSize: 10,
+				pageList:[5,10,15,20,30,40,50],
+				loadMsg:'数据加载中...',
+				columns:[[
+					#if($is_clz=="true")
+					{title:'',field:'dd',width:getWidth(0.02),align : 'center',
+							formatter:function(value,rec,index){
+						if (rec.id != null && rec.id != "") {
+							var light = lightMap.get(rec.id);
+							if(light>0&&light<120){
+								light= "<img width=25 height=20 src='${base}/images/private/yellow.gif'  />";
+							}
+							if(light<=0){
+								light= "<img width=25 height=20 src='${base}/images/private/red.gif'  />";
+							}
+							if(light>120){
+								light= "<img width=25 height=20 src='${base}/images/private/green.gif'  />";
+							}
+							return light;
+						}else{
+							return "";
+						}
+					}},
+					#end
+				{title : '工单编号',field : 'aa',width:getWidth(0.06),align : 'center',
+						formatter:function(value,rec,index){
+					return rec.id;
+				}},
+				{title : '来电号码',field : 'phone',width:getWidth(0.04),align : 'center'},
+				{title : '来电人姓名',field : 'fromname',width:getWidth(0.04),align : 'center'},
+				{title : '来电类型',field : 'phone_type',width:getWidth(0.04),align : 'center',
+						formatter:function(value,rec,index) {
+					if (value != null && value != "") {
+						value = typeMap.get(value);
+					}
+					return value;
+				}},
+				{title : '服务事项',field : 'bb',width:getWidth(0.04),align : 'center',
+						formatter:function(value,rec,index) {
+					var value = rec.phone_type + rec.repairs_type ;
+					if (value != null && value != "") {
+						value = serverMap.get(value);
+					}
+					return value;
+				}},
+				{title : '所属小区',field : 'management',width:getWidth(0.04),align : 'center',
+						formatter:function(value,rec,index) {
+					if (value != null && value != "") {
+						value = managementMap.get(value);
+					}
+					return value;
+				}},
+				{title : '标题',field : 'title',width:getWidth(0.12),align : 'left'},
+				{title : '当前状态',field : 'status',width:getWidth(0.04),align : 'center',
+						formatter:function(value,rec,index) {
+					var status_name = "";
+					if(value=="0"){
+						status_name="草稿";
+					}else if(value=="1"){
+						status_name="已关闭";
+					}else if(value=="2"){
+						status_name="待签收";
+					}else if(value=="3"){
+						status_name="已签收";
+					}else if(value=="4"){
+						status_name="已解决";
+					}
+					return status_name;
+				}
+				},
+				{title : '操作', field:'cc', width:getWidth(0.06), align:'center',
+					formatter:function (value, rec, index) {
+						var s2 = "查看", s3 = "录音";
+						s2 = "<a href='javascript:detailInfo(\"" + rec.id + "\")'>查看</a>";
+						s3 = "<a href='javascript:toRecord(\"" + rec.id + "\")'>录音</a>";
+						var s1 = "回复";
+						s1 = "<a href='javascript:tohf(\"" + rec.id + "\")'>回复</a>";
+						if ($("#zb_type").val() == "yjj") {
+							return s1 + " | " + s2 + " | " + s3;
+						} else {
+							return s2 + " | " + s3;
+						}
+					}
+					}
+				]],
+				frozenColumns:[[
+					{field:"id",checkbox:true}
+				]]
+			});
+			//设置分页控件
+			var p = $("#dg1").datagrid("getPager");
+			$(p).pagination({
+				beforePageText: "第",//页数文本框前显示的汉字
+				afterPageText: "页    共 {pages} 页",
+				displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",
+				onBeforeRefresh:function(){
+					$(this).pagination('loading');
+
+					$(this).pagination('loaded');
+				}
+			});
+		}
+		Page.onLoad(function() {
+			loadGrid();
+			initButton();
+		});
+		$(window).resize(function () {
+			clearTimeout(timer);
+			timer=setTimeout(function(){
+				$('#dg1').datagrid('resize');
+				$('div.panel-body').css('width','auto'); //////
+			},100);
+		});
+		function tohf(id){
+			var url='${base}/private/handle/tohf?id='+id;
+			showw = window.open(url,'受理件回复', 'status=yes,toolbar=no,menubar=no,resizable=yes,scrollbars=yes,location=no,width=900,height=650');
+		}
+		function detailInfo(id){
+			var url='${base}/private/management/info/detail?id='+id;
+			showw = window.open(url,'受理件查看', 'status=yes,toolbar=no,menubar=no,resizable=yes,scrollbars=yes,location=no,width=900,height=800');
+		}
+
+		function toEdit(id){
+			var url='${base}/private/management/info/toEdit?id='+id;
+			showw = window.open(url,'受理件办理', 'status=yes,toolbar=no,menubar=no,resizable=yes,scrollbars=yes,location=no,width=900,height=800');
+		}
+
+		function toRecord(id){
+			var url='${base}/private/management/info/bofangluyin?id='+id;
+			showw = window.open(url,'录音播放', 'status=yes,toolbar=no,menubar=no,resizable=yes,scrollbars=yes,location=no,width=520,height=auto');
+		}
+
+		function changeSearchType(){
+			var searchType = $("#searchType").val();
+			jQuery.ajax({
+				url : "${base}/private/management/info/getOperation",
+				data : {"ssfl":searchType,"state":"1"},
+				success : function (res) {
+					var operationList = eval("("+res+")");//转换为json对象
+					var len = operationList.length;
+					$("#searchServer option").remove();
+					if(len == 0){
+						$("#searchServer").append("<option value='-1' >全部</option>");
+					}else {
+						$("#searchServer").append("<option value='-1' >全部</option>");
+						for (var i = 0; i < len; i++) {
+							$("#searchServer").append("<option value='" + operationList[i].f_vc_daimz1 + "' >" + operationList[i].f_vc_daimmc + "</option>");
+						}
+					}
+				}
+			});
+		}
+
+		//-->
+	</SCRIPT>
+</head>
+<body leftmargin="0" topmargin="0" class="easyui-layout">
+<form name="form1" id="form1" method="post">
+	<input type="hidden" name="checkids" id="checkids" value="" />
+	<input type="hidden" name="zb_type" id="zb_type" value="$!zb_type" />
+	<div region="north" border="false"
+		 style="overflow: hidden; padding: 10px 10px 0px 10px">
+		<div class="padding_top10">
+			<table width="100%" border="0" cellpadding="0" cellspacing="3">
+				<tr>
+					<td width="50" align="left" nowrap>
+						工单号：
+					</td>
+					<td width="140">
+						<input  type="text" id="keyId" name="keyId"
+								value="" style="width: 120px">
+					</td>
+					<td width="70" align="left" nowrap>
+						来电号码：
+					</td>
+					<td width="140">
+						<input  type="text" id="fromnum" name="fromnum"
+								value="" style="width: 120px">
+					</td>
+					<td width="60" align="left" nowrap>
+						来电类型：
+					</td>
+					<td width="100">
+						<select name="searchType" id="searchType" onchange="changeSearchType()">
+							<option value="-1" >全部</option>
+							#foreach($type as $typeList)
+							<option value="$!type.flbh" >$!type.flmc</option>
+							#end
+						</select>
+					</td>
+					<td width="60" align="left" nowrap>
+						服务事项：
+					</td>
+					<td width="100">
+						<select name="searchServer" id="searchServer">
+							<option value="-1" >全部</option>
+							#foreach($server as $serverList)
+							<option value="$!server.f_vc_daimz1" >$!server.f_vc_daimmc</option>
+							#end
+						</select>
+					</td>
+					<td width="60" align="left" nowrap>
+						查询时间：
+					</td>
+					<td>
+						<input type="text" id="start_date" name="start_date" value="$!start_date"  style="width:140px;height:16px;background:#F4F9FB url(${base}/include/controls/my97/skin/datePicker.gif) no-repeat right;"
+							   onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" >
+						到 <input type="text" id="end_date" name="end_date" value="$!end_date"   style="width:140px;height:16px;background:#F4F9FB url(${base}/include/controls/my97/skin/datePicker.gif) no-repeat right;"
+								 onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" >
+					</td>
+					<td id="searchBtn"  align="left" valign="middle">
+						<input type="button" class="button" name="Submitbutton" id="Submitbutton"
+							   value="查询" onClick="loadGrid()">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div region="center" border="false"
+		 style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+		<div id="dg1" style="width: 100%; height: 100%;"></div>
+	</div>
+
+</form>
+</body>
+</html>

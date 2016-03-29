@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<!-- 框架 
+		<link href="${base}/include/css/default.css" rel="stylesheet"
+			type="text/css" />-->
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+	</head>
+	<body>
+		#parse("public/top.html")
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/zxft" >在线访谈</a>-&gt;
+					#if($!status==1)
+					<a href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15" >访谈预告</a>
+					#end #if($!status==2)
+					<a href="${base}/public/listZXFT?status=2&crPage=1&pageSize=15" >本期访谈</a>
+					#end #if($!status==3)
+					<a href="${base}/public/listZXFT?status=3&crPage=1&pageSize=15" >往期访谈</a>
+					#end #if($!status==4)
+					<a href="${base}/public/listZXFT?status=4&crPage=1&pageSize=15" >年度计划</a>
+					#end
+				</div>
+			</div>
+			<div class="site_nr">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td height="60" align="center" class="xqye_24">
+							<div id="pagetitle">
+								<h1>
+										$!intertheme.theme
+								</h1>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<table width="98%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td style="background:url(${base}/images/public/xqye_2.gif) repeat-x" height="4">
+										
+									</td>
+								</tr>
+							</table>
+							<table width="98%" border="0" cellspacing="0" cellpadding="10">
+								<tr>
+									<td height="45" align="center" class="xqye_12">
+										来源：$!intertheme.founder 发布时间： $!intertheme.createtime 【字体：
+												<a href="javascript:fontZoomC();" class="wz">大</a>
+												<a href="javascript:fontZoomB();" class="wz">中</a>
+												<a href="javascript:fontZoomA();" class="wz">小</a>】
+									</td>
+								</tr>
+								<tr>
+									<td align="left" class="xqye_14">
+										<div id="fontzoom">
+										$!intertheme.note
+										</div>
+									</td>
+								</tr>
+<!--								<tr>-->
+<!--									<td align="center" class="xqye_14">-->
+<!--										<img src="${base}/images/public/xqye_p1.jpg" width="699"-->
+<!--											height="453" align="middle" />-->
+<!--									</td>-->
+<!--								</tr>-->
+								<tr>
+									<td height="60">
+										<table width="100%" border="0" align="center" cellpadding="0"
+											cellspacing="0">
+											<tr>
+												<td align="left">
+													<a href="javascript:printPage();"><img
+															src="${base}/images/public/xqye_print.jpg" width="88"
+															height="20" border="0" />
+													</a>&nbsp;
+													<a href="javascript:window.close();"><img
+															src="${base}/images/public/xqye_close.jpg" width="88"
+															height="20" border="0" />
+													</a>
+												</td>
+												<td align="right">
+													<img src="${base}/images/public/xqye_fx.jpg" width="210"
+														height="16" border="0" />
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	#parse("public/foot.html")
+	</body>
+</html>

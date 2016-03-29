@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="overflow:hidden">
+<head>
+    <title>$!app_name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<!-- 框架 -->
+	<link rel="stylesheet" type="text/css" href="${base}/include/css/$!stylename/style.css"/>
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+    <script src="${base}/include/js/main.js"></script>
+    <script src="${base}/include/js/string.js"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+ <body class="dialogBody">
+		<form name='form1' id="form1" method='post'>
+			<input type="hidden" name="doAction" id="doAction" value="update">
+			<input type="hidden" name="ssfl" id="ssfl" value="$!flbh">
+			<table width="100%" height="100%" border="0">
+				<tr>
+					<td valign="middle">
+						<table align="center" cellpadding="2" cellspacing="0">
+							<tr>
+								<td width="104" height="10"></td>
+								<td width="6"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									所属分类：
+								</td>
+								<td width="260">
+									<select id="flbh" name="flbh">
+											<option value="">全部</option>
+											#foreach($obj in $list)
+											<option value="$!obj">
+												<script type="text/javascript">document.write(gettreecode("$!obj"))</script>
+												$!flList.get("$!obj")
+											</option>
+											#end
+									</select>
+									<script type="text/javascript">selected(form1.flbh,"$!flbh")</script>
+								</td>
+							</tr>
+
+							<tr>
+								<td align="right" nowrap>
+									级别：
+								</td>
+								<td>
+									<select name="ext1" id="ext1">
+						                 <option value="1">一级</option>
+						                 <option value="2">二级</option>
+						                 <option value="3">三级</option>
+						                 <option value="4">四级</option>
+						            </select>
+								</td>
+							</tr>
+
+							<tr>
+								<td align="right" nowrap>
+									代码名称：
+								</td>
+								<td>
+									<input type="text" name="f_vc_daimmc" id="f_vc_daimmc" size="25"
+										maxlength="100" value="" verify="NotNull">
+								</td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									数字代码：
+								</td>
+								<td>
+									<input type="text" name="f_vc_daimz1" id="f_vc_daimz1" size="25"
+										maxlength="100" value="" verify="NotNull">
+								</td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									字母代码：
+								</td>
+								<td>
+									<input type="text" name="f_vc_daimz2" id="f_vc_daimz2" size="25"
+										maxlength="100" value="">
+								</td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									代码说明：
+								</td>
+								<td>
+									<input type="text" name="bz" id="bz" size="25"
+										maxlength="100" value="">
+								</td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									数据状态：
+								</td>
+								<td>
+									<select name="f_vc_daimjbj"  class="input">
+										<option value="1" >激活</option>
+										<option value="0">冻结</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td align="right" nowrap>
+									备注：
+								</td>
+								<td>
+									<textarea rows="4" cols="40" name="f_vc_beiz" id="f_vc_beiz"></textarea>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body> 
+</html>

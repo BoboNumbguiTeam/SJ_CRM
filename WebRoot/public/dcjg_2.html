@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script src="${base}/include/js/jquery.datagrid.js"></script>
+		<script type="text/javascript">
+	function addTotals() {
+	
+		var titleids = $("#titleids").val();
+		var titleid = titleids.split(":");
+		var optionids="";
+		for ( var i = 0; i < titleid.length-1; i++) {
+			var boxbutton = document.getElementsByName("boxbutton_"
+					+ titleid[i]);
+			var k=0;
+			for ( var j = 0; j < boxbutton.length; j++) {
+				if (boxbutton[j].checked) {
+					k=k+1;
+					optionids += boxbutton[j].value + ":";
+				}
+			}
+			if(k==0){
+				Dialog.alert("您好！你还有题目没有选择，每道题至少选择一个选项，谢谢！")
+				optionids="";
+				return ; 
+			}
+			
+		}
+		if(optionids==""){
+		Dialog.alert("您好！耽误您一分钟，勾选一下这张调查表，谢谢！");
+		}else{
+		
+		
+		jQuery
+				.ajax( {
+					type : 'POST',
+					url : "${base}/public/addTotals",
+					data : {
+						"optionids" : optionids
+					},
+					success : function(res) {
+						if (res) {
+						
+							Dialog.alert("投票成功！");
+							//window.close();
+                           
+						} else {
+							Dialog.alert("投票失败！");
+						}
+                         
+						return false;
+					},
+					fail : function(res) {
+						Dialog.alert("系统错误?!");
+					}
+				});
+				}
+	}
+	
+	
+	function tocount(id){
+	 window.open("${base}/public/tocount?id="+id);
+	}
+</script>
+	</head>
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"
+		class="body">
+		<div style="width: 1000px; margin: 0px auto;">
+			<table width="1000" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td>
+						<img src="${base}/images/public/dcjg_2.jpg" width="1000" height="137"
+							border="0" usemap="#Map2" />
+					</td>
+				</tr>
+			</table>
+			<map name="Map" id="Map">
+				<area shape="rect" coords="50,2,64,15" href="#" />
+				<area shape="rect" coords="70,2,87,16" href="#" />
+				<area shape="rect" coords="90,1,105,16" href="#" />
+				<area shape="rect" coords="109,2,124,19" href="#" />
+				<area shape="rect" coords="128,0,146,18" href="#" />
+				<area shape="rect" coords="150,1,165,15" href="#" />
+				<area shape="rect" coords="170,0,185,15" href="#" />
+				<area shape="rect" coords="194,-1,211,16" href="#" />
+			</map>
+			
+			
+			<form name='form1' id="form1" method='post'>
+			<table width="1000" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="140" align="center">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td height="60" align="center" class="dcjg_36">
+									$!t_theme.title<input type="hidden" name="titleids" id="titleids"
+							value="$!titleids" />
+								</td>
+							</tr>
+							<tr>
+								<td height="30" align="center" class="yjzj_14">
+									（起始: 2014-02-28 - 截止:2014-05-28）
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<table width="927" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								
+							 <td  style="background:url(${base}/images/public/dcjg_4.jpg) repeat-x 0 50% ">&nbsp;</td>
+							</tr>
+							
+
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="dcjg_bg">
+						<table class="margin_top12 margin_bottom30" width="90%" border="0"
+							cellspacing="0" cellpadding="0">
+							<tr>
+								<td align="left" class="xqye_14">
+									$!t_theme.memo
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="xqye_14">
+								
+								#foreach($title in $!t_titles) #if($title.optiontype==1)				
+								
+								
+									<table class="margin_top12 margin_bottom30" width="825"
+										border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td colspan="3" align="left" class="xqye_14">
+												<strong>$title.titleno、$title.content</strong>
+											</td>
+										</tr>
+										#foreach($option in $title.t_onlinesurvey_option)
+										<tr>
+											<td colspan="3" align="left" class="xqye_14">
+												<input name="boxbutton_$option.titleid" type="checkbox" class="xqye_14"
+													value="$option.id" />
+												$option.optiontitle、$option.content 
+											</td>
+										</tr>
+										#end
+									</table>
+									#else
+									<table class="margin_top12 margin_bottom30" width="825"
+										border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td width="388" align="left" class="xqye_14">
+												<strong>$title.titleno、$title.content</strong>
+											</td>
+										</tr>
+										#foreach($option in $title.t_onlinesurvey_option)
+										<tr>
+											<td align="left" class="xqye_14">
+												<input name="boxbutton_$option.titleid" type="radio" class="xqye_14"
+													value="$option.id" />
+												$option.optiontitle、$option.content 
+											</td>
+										</tr>
+										#end
+									</table>
+									#end
+									#end
+									
+								</td>
+							</tr>
+							<tr>
+								<td align="center" class="xqye_14">
+									<input name="button" type="button" class="btn_search"
+										value="提交" onClick='addTotals();'/>
+									<input name="Submit2" type="reset" class="btn_search"
+										value="重置" />
+									<input name="button2" type="button" class="btn_search"
+										value="查看结果" onclick="tocount($!t_theme.id);" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</form>
+			<map name="Map2" id="Map2">
+				<area shape="rect" coords="891,96,999,156"
+					href="${base}/public/wsdc" />
+			</map>
+		</div>
+	</body>
+</html>

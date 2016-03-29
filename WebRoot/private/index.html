@@ -1,0 +1,591 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<script type='text/javascript'>
+			var CONTEXTPATH = '${base}';
+			var stylePath = '$!stylename';
+		</script>
+		<link rel="stylesheet" type="text/css" href="${base}/include/css/$!stylename/style.css" />
+		<link href="${base}/include/css/msg.css" rel="stylesheet" type="text/css" />
+		<link href="${base}/include/css/easyui.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="${base}/include/js/main.js"></script>
+		<script type="text/javascript" src="${base}/include/js/string.js"></script>
+		<script type="text/javascript" src="${base}/include/js/jquery.easyui.pack.js"></script>
+		<script type="text/javascript" src='${base}/include/js/tabpage.js'></script>
+		<script type="text/javascript" src='${base}/include/js/mainfrm.js'></script>
+		<!--[if IE 6]>
+			<script language="javascript" type="text/javascript" src="js/DD_belatedPNG.min.js"></script>
+		<![endif]-->
+	</head>
+	<body scroll=no>
+		<input type="hidden" id="shift" value="" />
+		<input type="hidden" id="three" value="" />
+		<input type="hidden" id="appid" value="" />
+		<div id="mainFrame" class="mainwidth">
+			<div style="height: 111px; overflow: hidden;" id="headbox">
+				<div class="top">
+					<!--右顶侧菜单-->
+					<div class="top_right">
+						<ul>
+							<li>
+								<a href="javascript:openChangeStyle()" class="png"><img
+										src="${base}/include/img/r_icon1.png" width="34" height="30"
+										border="0" class="png" />
+								</a>
+							</li>
+							<!--<li>-->
+								<!--<a href="javascript:openSystemHelp()" class="png"><img-->
+										<!--src="${base}/include/img/r_icon2.png" width="34" height="30"-->
+										<!--border="0" class="png" />-->
+								<!--</a>-->
+							<!--</li>-->
+							<li>
+								<a href="javascript:lock()" class="png"><img
+										src="${base}/include/img/r_icon3.png" width="34" height="30"
+										border="0" class="png" />
+								</a>
+							</li>
+							<li>
+								<a href="javascript:logout()" class="png"><img
+										src="${base}/include/img/r_icon4.png" width="34" height="30"
+										border="0" class="png" />
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="top_left">
+						<div class="top_logo png"></div>
+					</div>
+					<!--呼叫控件-->
+					#if("$!cti"=="cti")
+					<div class="top_center">
+						<ul>
+							<!-- $!curuser.loginname -->
+							<li>
+								<a href="javascript:void(0)" id="qr" onclick="Connect()" title="签入">
+									<div class="top_cz_img1 png"></div>签入
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="qc" name="init_button" onclick="DisConnect()" title="签出">
+									<div class="top_cz_img2 png"></div>签出
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="jy" name="init_button" onclick="Hold();" title="静音">
+									<div class="top_cz_img3 png"></div>静音
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="qxjy" name="init_button" onclick="UnHold()" style="display: none" title="通话">
+									<div class="top_cz_img3a png"></div>通话
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="wh" name="init_button" onclick="CallOut();" title="外呼">
+									<div class="top_cz_img4 png"></div>外呼
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="zj" name="init_button" onclick="TransOtherNum();" title="转接">
+									<div class="top_cz_img5 png"></div>转接
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="sfth" name="init_button" class="top_cz_text" onclick="ThreeCall()" title="三方通话">
+									<div class="top_cz_img6 png"></div>三方通话
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="sx" name="init_button" onclick="SetAgentState(4,0)" title="闲" >
+									<div class="top_cz_img7 png"></div>闲
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="sm" name="init_button" onclick="SetAgentState(2,0)" title="忙" style="display: none">
+									<div class="top_cz_img7a png"></div>忙
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="zhaijj" onclick="Offhook();" title="摘机" style="display: none;">
+									<div class="top_cz_img8 png"></div>摘机
+								</a>
+							</li>
+							<li>
+								<a href="javascript:void(0)" id="gj" onclick="Onhook();" title="挂机" style="display: none;">
+									<div class="top_cz_img8a png"></div>挂机
+								</a>
+							</li>
+						</ul>
+					</div>
+					#end
+					<!--系统菜单切 if("$!user.unitid"=="0001") 换-->
+					<div class="topmain_right">
+
+						<div style="margin-top: 8px; text-align: center;">
+							<select name="appname" id="appname"></select>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<!--上部系统菜单-->	
+				<div class="Nmenu">
+					<div class="Nmenu_menu">
+						<ul>
+							#foreach($modules in $modulessublist)
+							<li>
+								<a href="javascript:dochange('$!modules.id','$!modules.url','$!modules.name');dochangeimg($!velocityCount)"
+									class="Mmenu png" id=menuid$!velocityCount
+									title="$!modules.name"><strong class="png"><span
+										class="png"> #if($!{modules.name.toString().length()} >
+											6) $!{modules.name.toString().substring(0,6)} #else
+											$!modules.name #end </span>
+								</strong>
+								</a>
+							</li>
+							#if($!velocityCount==1)
+							<script type="text/javascript">
+                                $(document).ready(function(){
+                                    dochange('$!modules.id', '$!modules.url', '$!modules.name');
+                                });
+                            </script>
+							#end #end
+							<li>
+								<a href="http://www.51zhongyixing.com/zyzlsms/" target="_blank"
+								   class="Mmenu png" title="安徽中意之旅短信发送平台"><strong class="png"><span class="png">短信平台</span>
+								</strong>
+								</a>
+							</li>
+							<!--Class Mmenu and Mmenu_this-->
+						</ul>
+					</div>
+					<!--个人信息及通知-->
+					<div class="Nmenu_user" >
+						<div class="Nmenu_user_left" >
+							<div id="notic_div" class="Nmenu_user_notic png"
+								#if($notices_num && $!notices_num!=0)style= "display:
+								block;"#else style="display: none;" #end>
+								<a id="notic_a" href="javascript:void(0);"
+									onclick="toNoticesPage();"
+									style="color: white; text-decoration: none">$!notices_num</a>
+							</div>
+							<a href="javascript:changePassword();" ><img
+									src="${base}/include/img/user.png" border="0" class="png" />
+							</a>
+						</div>
+						<div class="Nmenu_user_right" id="dvonline"></div>
+						<div class="clear"></div>
+					</div>
+					<!--来电显示区域-->
+					#if("$!cti"=="cti")
+					<div class="Nmenu_tel">
+						来电号码：
+						<span id="ldhm" style="width:130px;text-align:center; "></span>
+						来电时间：
+						<span id="ldsj" style="width:160px;text-align:center; "></span>
+						分机号：
+						<span style="width:50px;">$!fenjihao</span>
+					</div>
+					#end
+					<div class="clear"></div>
+				</div>
+			</div>
+			<!--中间区域-->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="position: relative;">
+				<tr>
+					<td width="160" valign="top" class="content_l" id="leftArea">
+						<div class="content_l_gnmenu" id="leftTop">
+							<dl>
+								<dt>
+									功能菜单
+								</dt>
+							</dl>
+						</div>
+						<div class="clear"></div>
+						<div id="leftdiv">
+							<iframe name="leftFrame" allowtransparency="true" id="leftFrame"
+								width="100%" height="100%" frameborder="NO" scrolling="auto"></iframe>
+						</div>
+						<div class="clear"></div>
+					</td>
+					<td id="middleArea" class="content_l"
+						style="width: 26px; display: none;"></td>
+					<td width="*" valign="top">
+						<div id="leftCTR"
+							onclick="javascript:showM('leftArea','middleArea');">
+							<span title="收缩面板" class="gnmenu_close"></span>
+						</div>
+						<div id="mainPanle" border="false" region="center"
+							style="background: #eee; padding: 0px; overflow: hidden; z-index: 10;">
+							<iframe name="tabsFrame" id="tabsFrame" scrolling="no"
+								frameborder="0" allowtransparency="true" width="100%"
+								height="100%" src="tabs.html"></iframe>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<!--页脚-->
+			<div id="footbox">
+				<div class="foot">
+					Copyright © 2015 大唐高鸿数据网络技术有限公司  版权所有
+				</div>
+			</div>
+		</div>
+		<input type="hidden" name="txtAgentID" id="txtAgentID" value="$!fenjihao" />
+		<input name="txtIp" id="txtIp" type="hidden" value="120.209.40.15" />
+		<input name="txtPort" id="txtPort" type="hidden" value="22222" />
+
+		<OBJECT ID="GHOCX" CLASSID="CLSID:07ECBD9D-1BCC-4104-B1A3-1B2AC7669072"
+				CODEBASE="${base}/private/cab/GohighAgent.cab#version=1,2,4,6" width= 0   height= 0>
+		</OBJECT>
+		#parse("include/js/call/siphone_activex.html")
+	</body>
+</html>
+<script language="JavaScript">
+<!--
+	function lock(){
+		top.Dialog.confirm("确定要锁屏吗，锁屏后只有重新输入密码才能解除。", function() {
+			openLockWindow();
+	 	});
+	}
+
+	function initSelect(){
+	#foreach($modules in $moduleslist)
+		$("#appname").append("<option value=\"$!modules.id\">$!modules.name</option> ");
+			#end
+		$("#appname").combobox({
+			editable:false,
+			onChange:function(newValue,oldValue){
+				if(oldValue!=""&&newValue!=oldValue){
+					jQuery.ajax({
+						type: 'POST',
+						url : "${base}/private/reload" ,
+						data : {"resid":newValue},
+						success : function (res) {
+							if(res=="true"){
+								window.location.reload();
+							}
+							return false;
+
+						},
+						fail : function(res) {
+							Dialog.alert("系统错误?!");
+						}
+					});
+				}
+			}
+		});
+		$("#appname").combobox("select", $!resid);
+	}
+
+	function validate(){
+		$!validate
+	}
+	function unlock(){	
+		if($DW.Verify.hasError()){
+       	  	return;
+         } 
+		jQuery.ajax({
+   		 	type: 'POST',
+   			url : "${base}/private/dounlock" ,
+   			data : $DW.$("#form1").serialize(),
+   			success : function (res) { 
+   				if(res=="true"){
+   					$D.close();
+   				}else{
+   					Dialog.alert(res);
+   				}
+   				return false; 
+   				
+   			},
+   			fail : function(res) {
+   				Dialog.alert("系统错误?!");
+   			}
+   		});
+	}
+	function openLockWindow(){
+		var d = new top.Dialog("lock");
+        d.Width = 360;
+        d.Height = 160;
+        d.Title = "系统锁屏";
+        d.URL = "${base}/private/lock";
+        d.OKEvent = function(){ 
+        	unlock();
+        };
+        d.CancelEvent = function(){ 
+        	top.location.replace('logout');
+        };
+        d.onLoad = function() {
+        	//$DW.$Z("password").focus();
+        }
+        d.ButtonCenter=true;
+        d.show(); 
+        d.OKButton.value=" 解锁 ";
+        d.CancelButton.value=" 注销 ";
+        $.post("${base}/private/dolock");
+
+	}
+    function changePassword(){
+        var d = new top.Dialog("ChangePassword");
+        d.Width = 390;
+        d.Height = 380;
+        d.Title = "个人信息";
+        d.URL = "${base}/private/sys/user/info";
+        d.OKEvent = function(){ 
+        	doSave();
+        };
+        d.onLoad = function() {
+            $DW.$Z("oldpassword").focus();
+        }
+        d.show();
+    }
+    function doSave(){
+    	if($DW.Verify.hasError()){
+    		  return;
+		} 
+    	if($DW.$("#loginname").val()!="$!curuser.loginname"){
+	    	jQuery.ajax({
+	    		url : "${base}/private/sys/user/ajaxname",
+	    		data : $DW.$("#form1").serialize(),
+				type: "POST",
+	    		success : function (res) {	
+	    			if(res=="true"){
+	    				Dialog.alert("用户名已存在");	
+	    				return;
+	    			}else{ 
+		    		    doit();
+	    			} 	
+	    		},
+	    		fail : function(res) {
+	    			Dialog.alert("系统错误?!");
+	    		}
+	    	}); 
+    	}else{
+    		doit();
+    	} 
+    }
+    function doit(){
+    	if ($DW.$("#oldpassword").val()==""){
+	    	top.Dialog.alert("请输入密码！");
+	    	$DW.$("#oldpassword").focus();
+			 return ;
+	    }
+	    if ($DW.$("#password2").val()!="" && $DW.$("#password").val()==""){   
+	         top.Dialog.alert("请输入重复新密码！");
+	         $DW.$("#password").focus();
+			 return ;
+	    }
+    	jQuery.ajax({
+		 	type: 'POST',
+			url : "${base}/private/sys/user/updateInfo" ,
+			data : $DW.$("#form1").serialize(),
+			success : function (res) { 
+				if(res=="relogin"){
+					$D.close();
+					top.Dialog.confirm("用户名或密码已修改，请重新登陆！",function(){
+						window.top.location.href="${base}/private/login";
+					},function(){
+						window.top.location.href="${base}/private/login";
+					});
+				}else if(res=="true"){
+					$D.close();
+					Dialog.alert("修改成功！");
+				}else if(res=="error"){
+					Dialog.alert("原密码不正确！");
+				}else{
+					Dialog.alert("修改失败！");
+				}
+			},
+			fail : function(res) {
+				Dialog.alert("系统错误?!");
+			}
+		}); 
+    }
+    function logout(){
+		top.Dialog.confirm("你确认要退出系统吗？", function() {
+			top.location.replace('logout');
+		});
+    }
+    function dochange(id, url, menuname){
+        if (url == '' || url == 'null') {
+            document.getElementById("leftFrame").src='${base}/private/left?sys_menu=' + menuname + '&sys_menuid=' + id + '&sys_random=' + Math.random();
+        } else {
+            if (url.indexOf("?") > 0) {
+                document.getElementById("leftFrame").src='${base}' + url + '&sys_menu=' + menuname + '&sys_menuid=' + id + '&sys_random=' + Math.random();
+            } else {
+                document.getElementById("leftFrame").src='${base}' + url + '?sys_menu=' + menuname + '&sys_mneuid=' + id + '&sys_random=' + Math.random();
+            }
+        }
+    }
+    var oldid = 1;
+    var imag2 = '${base}/images/private/sys/index_15.gif';
+    function dochangeimg(objid) {
+        try {
+            if (objid == oldid) {
+                return;
+            } else {
+                var a = document.getElementById("aamenuid" + objid);
+                a.style.color = '#EAFF00';
+                var objimg = eval('document.all.menuid' + objid);
+                objimg = eval('document.all.menuid' + oldid);
+                var olda = document.getElementById("aamenuid" + oldid);
+                olda.style.color = '';
+                objimg.background = imag2;
+                oldid = objid;
+            }
+        } catch(exception) {
+
+        }
+    }
+	var isOpen = true;
+    function getOnline(){
+        jQuery.ajax({
+			url : "${base}/private/online?loginname=$!curuser.loginname&sys_random=" + Math.random(), 
+			success : function (res) { 
+				if(res==-2){
+					if(isOpen){
+						isOpen = false;
+						top.Dialog.confirm("用户登陆已失效，请重新登陆！",function(){
+							window.top.location.href="${base}/private/login";
+						},function(){
+							window.top.location.href="${base}/private/login";
+						});
+					}
+				} else if (res > 0) {
+					$('#dvonline').html("您好，<span>$!curuser.realname&nbsp;</span></br>当前在线 <span>" + res + "</span> 人");
+				} else {
+					$('#dvonline').html("您好，<span>$!curuser.realname&nbsp;</span></br>当前在线 <span>1</span> 人");
+				}
+				return false;
+			},
+			fail : function(res) {
+				Dialog.alert("系统错误?!");
+			}
+		});
+        window.setTimeout('getOnline()', 1000 * 60 * 2);
+    }  
+
+  	//打开消息显示页面
+	function toNoticesPage(){
+		document.getElementById("tabsFrame").contentWindow.addTab("我的消息","${base}/private/msg/msgInfo/showNotices?sys_menu=我的消息 &sys_random="+ Math.random());
+	}
+	//ajax查询目前该用户的消息数量
+	function searchNotice(){
+		jQuery.ajax({
+   		 	type: 'POST',
+   			url : "${base}/private/searchNotics" ,
+   			success : function (res) { 
+   				if(res!="0"){
+   					$("#notic_div").show();
+   					$("#notic_a").text(res);
+   				}else{
+   					$("#notic_div").hide()
+   				}
+   				return false; 
+   			},
+   			fail : function(res) {
+   				Dialog.alert("系统错误?!");
+   			}
+   		});
+	}
+	
+    //自动查询消息数量
+    function AutoShowNotice(){
+		window.setInterval("searchNotice()",1000 * 60 * 3);//每10分钟查询一次公告更新;600000
+	}
+    window.setTimeout(AutoShowNotice(),1000 * 60 * 3);//延迟1分后执行
+    Page.onLoad(function() {
+   	 validate();
+   	 getOnline();
+	 initSelect();
+	 setInterval("sendSysMsg()",600000);//每10分钟查询一次公告更新;600000
+   });
+   //--> 
+	function showM(leftDIV,midDIV){
+		if(document.getElementById(leftDIV).style.display=="none"){
+			document.getElementById(leftDIV).style.display="";
+			document.getElementById(midDIV).style.display="none";
+			$("#leftCTR").css('left','130px')
+			$("#leftCTR").find('span').removeClass("gnmenu_open")
+			$("#leftCTR").find('span').addClass("gnmenu_close")
+			$("#"+midDIV).click(function(){$("#leftCTR").click();});
+		}else{
+			document.getElementById(leftDIV).style.display="none";
+			document.getElementById(midDIV).style.display="";
+			$("#leftCTR").css('left','5px')
+			$("#leftCTR").find('span').removeClass("gnmenu_close")
+			$("#leftCTR").find('span').addClass("gnmenu_open")
+			$("#"+midDIV).click(function(){$("#leftCTR").click();});
+		}
+		/*document.getElementById("leftCTR").click(function(){
+			alert(1)
+			//$("#leftArea").hide();
+		})*/
+	}
+	// 样式表切换
+	function openChangeStyle(){
+		var d = new top.Dialog("changeStyle");
+        d.Width = 800;
+        d.Height = 400;
+        d.Title = "修改页面样式";
+        d.URL = "${base}/private/toChangeStyle";
+        d.OKEvent = function(){ 
+        	updateStyleSave();
+        };
+        d.ButtonCenter=true;
+        d.show(); 
+        d.OKButton.value=" 修改 ";
+        d.CancelButton.value=" 取消 ";
+	}
+
+	//打开系统帮页面
+	function openSystemHelp(){
+		var url='${base}/private/sysHelp?sys_menu=系统使用帮助&sys_random=' + Math.random();
+  	   	var title='系统使用帮助';
+  	   	var parameters='height=700px, width=1150px, scrollbars=no, resizable=no';
+  	   	openwindow(url, title, parameters);
+	}
+      function updateStyleSave(){     
+		$DW.Page.MinMessage.Show({
+			text: '正在替换', 
+			type: 'load' 
+		});
+       	jQuery.ajax({
+       		type: 'POST',
+           	url : "${base}/private/doChangeStyle",
+           	data : $DW.$("#form1").serialize(),
+           	success : function (res) { 
+	     		if(res="true"){
+	      			$D.close();
+          			Dialog.alert("修改成功！",function(){
+          				 location.reload();
+          			});
+	       		}else{
+	           		Dialog.alert("修改失败！");
+	           	}
+           		$DW.Page.MinMessage.Hide();
+           			return false;
+           	},
+          	fail : function(res) {
+           		Dialog.alert("系统错误?!");
+         	}
+      });
+   }
+
+	function sendSysMsg(){
+		jQuery.ajax({
+			type: 'POST',
+			url : "${base}/private/management/info/autoSendMSG",
+			success : function (res) {
+
+			},
+			fail : function(res) {
+				Dialog.alert("系统错误?!");
+			}
+		});
+	}
+
+</script>

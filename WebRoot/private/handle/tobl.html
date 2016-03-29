@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<title>$!app_name</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+	</script>
+	<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet"
+		  type="text/css" />
+	<script src="${base}/include/js/main.js"></script>
+	<script src="${base}/include/js/string.js"></script>
+	<link href="${base}/include/css/themes/gray/easyui.css"
+		  rel="stylesheet" type="text/css" />
+	<script src="${base}/include/js/jquery.easyui.min.js"></script>
+	<script src="${base}/include/controls/my97/WdatePicker.js"></script>
+	<script>
+		var submit = 0;
+		function CheckIsRepeat() {
+			if (++submit > 1) {
+				return false;
+			}
+			return true;
+		}
+
+		function dosave(){
+			if(Verify.hasError()){
+				return;
+			}
+			if (!CheckIsRepeat()) {
+				Dialog.alert('请勿重复提交，本次提交操作将被忽略！');
+			} else {
+				gosubmit();
+			}
+		}
+
+		function gosubmit(){
+			jQuery.ajax({
+				type: "POST",
+				url : "${base}/private/handle/dofk",
+				data : $("#form1").serialize(),
+				success : function (res) {
+
+					if(res=="true"){
+						Dialog.alert("反馈成功！",function(){parent.opener.loadData();window.close();});
+
+					}else{
+						Dialog.alert("反馈失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+
+		//关闭此选项卡！
+		function closeThisTab(){
+			parent.closeNowTab();
+		}
+
+		#if ($res)
+			Page.onLoad(function(){
+				parent.closeMe("$!res", "Update");
+			});
+
+		#end
+
+		
+	</script>
+</head>
+<body leftmargin="0" topmargin="0" class="easyui-layout">
+<form name='form1' id="form1" method='post'
+	  action="${base}/private/handle/dofk">
+	<input type="hidden" name="id" id="id" value="$!obj.id">
+	<div region="center" border="false"
+		 style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					基本信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right" nowrap>
+								来电类型：
+							</td>
+							<td width="140">
+									#if($!obj.phone_type)
+										$!ptHT.get("$!obj.phone_type")
+									#end
+							</td>
+							<td width="80" align="right" nowrap>
+								服务事项：
+							</td>
+							<td width="140">
+								#if($!obj.repairs_type)
+										$!sxHT.get("$!obj.phone_type$!obj.repairs_type")
+								#end
+							</td>
+							<td width="80" align="right" nowrap>
+								登记员：
+							</td>
+							<td colspan="3" height="25" colspan="2" align="left" class="font12">
+								$!obj.loginname
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					客户信息
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								客户姓名：
+							</td>
+							<td width="140">
+										<span class="font12">
+											$!obj.fromname
+										</span>
+							</td>
+							<td width="80" align="right">
+								联系电话：
+							</td>
+							<td width="140">
+										<span class="font12">
+											$!obj.phone
+										</span>
+							</td>
+							<td width="80" align="right">
+								是否回访：
+							</td>
+							<td height="25" colspan="4" align="left" bgcolor="#FFFFFF"
+								class="font12">
+								#if($obj.ishuifang==0)
+								无需回访
+								#else
+								需要回访
+								#end
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					内容描述
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								标题：
+							</td>
+							<td>
+								<$!obj.title
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								内容：
+							</td>
+							<td>
+								$!obj.note
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					转办描述
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk" id="zhuanban_tab">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								派工标准：
+							</td>
+							<td width="380">
+							#if($!zhuanban.seed_type==1)
+								应急派工
+							#else
+								预约派工
+							#end
+							</td>
+							<td width="80" align="right">
+								应完成时间：
+							</td>
+							<td>
+								$!zhuanban.need_date
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								转办内容：
+							</td>
+							<td>
+								$!zhuanban.zb_note
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#if($!cbList.size()>0)
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					重办描述
+				</td>
+			</tr>
+		</table>
+		#foreach($obj in $!cbList)
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk" id="zhuanban_tab">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr>
+							<td width="80" align="right">
+								重办处理时间：
+							</td>
+							<td width="380">
+							$!obj.get(0)
+							</td>
+							<td width="80" align="right">
+								重办处理人：
+							</td>
+							<td>
+								$!obj.get(2)
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								重办原因：
+							</td>
+							<td>
+								$!obj.get(1)
+							</td>
+
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		#end
+		#end
+		<table width="98%" border="0" align="center" cellpadding="0"
+			   cellspacing="0" class="table_auto margin_top15 table_titlebk">
+			<tr>
+				<td class="table_title">
+					处理结果
+				</td>
+			</tr>
+		</table>
+		<table width="98%" border="0" align="center" cellpadding="0" cellspacing="0" class="table_auto table_nrbk">
+			<tr>
+				<td valign="top" class="padding10">
+					<table width="100%" border="0" cellpadding="0" cellspacing="3">
+					<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理结果：
+							</td>
+							<td>
+								<select name="status">
+								<option value="4" selected>已解决</option>
+								<option value="5">未解决</option>
+								</select>
+							</td>
+						</tr>
+						<tr bgcolor="#ffffff">
+							<td width="80" align="right" valign="top">
+								处理内容：
+							</td>
+							<td>
+								<textarea name="reply_note" style="width: 700px; height: 80px;" verify="处理内容|NotNull"  ></textarea>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div region="south" border="false" style="overflow: hidden; padding: 10px 10px 0px 10px">
+		<table width="98%" border="0" cellspacing="0" cellpadding="0" class="table_auto tcck_foot margin_top10">
+			<tr>
+				<td align="center">
+					<input class="button" type="button" name="btnOk" value="确 定" onclick="dosave();" />
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<link href="${base}/include/css/public/tzxx.css" rel="stylesheet"
+			type="text/css" />
+		<script type="text/javascript">
+			 function setStr(){
+			      var typedate=document.getElementById("typedate").value;
+			      document.getElementById("typedate").value=htmlEncode(JTrim(typedate));
+			      var searchpassword=document.getElementById("searchpassword").value;
+			      document.getElementById("searchpassword").value=htmlEncode(JTrim(searchpassword));
+			    }
+			   //查询
+		function searchLetter(){     
+			    setStr();
+			    if($("#typedate").val()==""&&$("#searchpassword").val()==""){
+			     Dialog.alert("搜索条件查询码和标题不能都为空！");
+			    return false;
+			    }else{
+				    var searchpassword=$("#searchpassword").val();
+				    var typedate2=$("#typedate").val();
+				    var xz=$("#xz").val();
+				      window.open("${base}/public/searchLetter2?xz="+xz+"&searchpassword="
+							+ searchpassword + "&typedate="+typedate2, "_self", "");
+				}
+	           }
+			</script>
+		<script>
+			function nextPage(startNum){
+			startNum=startNum+5;
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ startNum + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			function prePage(startNum){
+			startNum=startNum-5;
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ startNum + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			function countPage(count){
+			var startNum=1;
+			if(count%5){
+				startNum=(Math.floor(count/5)-1)*5+1;
+			}else{
+				startNum=Math.floor(count/5)*5+1;
+			}
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ count + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			
+			</script>
+	</head>
+
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<div class="top">
+			<div class="top_toplink fontV">
+				<span><a href="#">手机门户</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+					href="#">无障碍浏览</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+					href="http://220.178.59.114:8099/">返回首页</a> </span>
+<script language="JavaScript" type="text/JavaScript">
+	var day = "";
+	var month = "";
+	var ampm = "";
+	var ampmhour = "";
+	var myweekday = "";
+	var year = "";
+	mydate = new Date();
+	myweekday = mydate.getDay();
+	mymonth = mydate.getMonth() + 1;
+	myday = mydate.getDate();
+	myyear = mydate.getYear();
+	year = (myyear > 200) ? myyear : 1900 + myyear;
+	if (myweekday == 0)
+		weekday = " 星期日 ";
+	else if (myweekday == 1)
+		weekday = " 星期一 ";
+	else if (myweekday == 2)
+		weekday = " 星期二 ";
+	else if (myweekday == 3)
+		weekday = " 星期三 ";
+	else if (myweekday == 4)
+		weekday = " 星期四 ";
+	else if (myweekday == 5)
+		weekday = " 星期五 ";
+	else if (myweekday == 6)
+		weekday = " 星期六 ";
+	document.write(year + "年" + mymonth + "月" + myday + "日 " + weekday);
+</script>
+			</div>
+			<div class="top_banner">
+				<div class="top_logo">
+					<h1>
+						<a href="http://220.178.59.114:8099/" title="安徽省交通运输厅">安徽省交通运输厅</a>
+					</h1>
+				</div>
+				<div class="top_right">
+					<div class="top_tq">
+						<iframe allowtransparency="true" frameborder="0" width="180"
+							height="30" scrolling="no"
+							src="http://tianqi.2345.com/plugin/widget/index.htm?s=3&z=2&t=0&v=0&d=3&k=&f=1&q=1&e=1&a=1&c=54511&w=180&h=40"></iframe>
+					</div>
+					<div class="top_search">
+						<form>
+							<input type="text" name="searchword" value="" />
+							<button>
+								搜索
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tzxx_menu">
+			<ul>
+				#if($!xz==50)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15">厅长信箱</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15">厅长信箱</a>
+				</li>
+				#end #if($!xz==45)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15">在线咨询</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15">在线咨询</a>
+				</li>
+				#end #if($!xz==46)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15">建言献策</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15">建言献策</a>
+				</li>
+				#end #if($!xz==51)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15">在线投诉</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15">在线投诉</a>
+				</li>
+				#end #if($!xz==47)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15">在线举报</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15">在线举报</a>
+				</li>
+				#end
+			</ul>
+		</div>
+		<div class="site_body1">
+			<table width="1004" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="39" align="center"
+						background="${base}/images/public/wsdc_2.jpg">
+						<table width="98%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="20" align="left" class="jtxw_font14">
+									<img src="${base}/images/public/wsdc_3.jpg" width="14"
+										height="14" />
+								</td>
+								<td align="left" class="wsdc_12">
+									您当前的位置：
+									<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+									<a href="${base}/public" >网络问政</a> -&gt;
+									#if($!xz==50)
+									<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15" >厅长信箱</a>
+									#end #if($!xz==45)
+									<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15" >在线咨询</a>
+									#end #if($!xz==46)
+									<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15" >建言献策</a>
+									#end #if($!xz==51)
+									<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15" >在线投诉</a>
+									#end #if($!xz==47)
+									<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15" >在线举报</a>
+									#end
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				class="tzxx_top20 tzxx_bottom20">
+				<tr>
+					<td width="120" align="center" class="tzxx_rightline">
+						#if($!xz==50)
+						<img src="${base}/images/public/tzxx_04.jpg" width="99"
+							height="98" />
+						#end #if($!xz==45)
+						<img src="${base}/images/public/tzxx_08.jpg" width="99"
+							height="98" />
+						#end #if($!xz==46)
+						<img src="${base}/images/public/tzxx_09.jpg" width="99"
+							height="98" />
+						#end #if($!xz==51)
+						<img src="${base}/images/public/tzxx_10.jpg" width="99"
+							height="98" />
+						#end #if($!xz==47)
+						<img src="${base}/images/public/tzxx_11.jpg" width="99"
+							height="98" />
+						#end
+
+					</td>
+					<td width="20">
+						&nbsp;
+					</td>
+					<td class="tzxx_height24">
+						&nbsp;&nbsp;&nbsp;
+						欢迎您访问安徽交通门户网站!安徽交通的发展离不开你们的智慧和贡献，我们真诚地欢迎您通过来信等方式向我们反映问题，为安徽交通的发展提出建议，或对我们工作中的不足之处提出批评。为提高办事效率，明确责任，请按问题类别向我们反映。参与这项活动请您熟悉并遵守中华人民共和国国务院颁布的《
+						<a href="#"><font color="#FF0000">信访条例</font> </a>》和《
+						<a href="#"><font color="#FF0000">安徽省信访条例</font> </a>》。
+						<br />
+						&nbsp;&nbsp;&nbsp;
+						注：如您需要得到有关方面的答复，除意见征集以外的信件请务必留下真实姓名、E-MAIL地址和联系电话，便于有关部门向您了解具体的情况，妥善处理您反映的问题；未署真实姓名、电邮地址和联系电话的邮件，我们无法处理与反馈，敬请原谅!
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="213" align="center" valign="top" class="tzxx_bk">
+						<table width="100%" border="0" cellspacing="10" cellpadding="0">
+							<tr>
+								<td height="48" align="left"
+									background="${base}/images/public/tzxx_05.jpg" class="tzxx_an">
+									#if($!xz==50)
+									<a href="${base}/public/toaddLetter?xz=50">我要写信</a> #end
+									#if($!xz==45)
+									<a href="${base}/public/toaddLetter?xz=45">我要咨询</a> #end
+									#if($!xz==46)
+									<a href="${base}/public/toaddLetter?xz=46">我要献策</a> #end
+									#if($!xz==51)
+									<a href="${base}/public/toaddLetter?xz=51">我要投诉</a> #end
+									#if($!xz==47)
+									<a href="${base}/public/toaddLetter?xz=51">我要举报</a> #end
+								</td>
+							</tr>
+						</table>
+						<table width="193" height="30" border="0" align="center"
+							cellpadding="0" cellspacing="0" class="tzxx_downline">
+							<tr>
+								<td width="20" align="center">
+									<img src="${base}/images/public/notice_dot.gif" width="5"
+										height="10" />
+								</td>
+								<td align="left" class="tzxx_font14">
+									<strong><font color="#0d7dd0">办件查询</font> </strong>
+								</td>
+							</tr>
+						</table>
+						<table width="100%" height="12" border="0" cellpadding="0"
+							cellspacing="0">
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<form name='form2' id="form2" method='post'>
+							<table width="90%" border="0" align="center" cellpadding="0"
+								cellspacing="2">
+								<!--          <tr>-->
+								<!--            <td width="60" height="35" align="right">信件编号<br /></td>-->
+								<!--            <td align="left"><input name="textfield2" type="text" class="tzxx_input"  size="12" /></td>-->
+								<!--          </tr>-->
+								<tr>
+									<td height="35" align="right">
+										查询码
+									</td>
+									<td align="left">
+										<input name="searchpassword" id="searchpassword" type="text"
+											class="tzxx_input" size="12" maxlength="20" />
+										<input type="hidden" name="xz" id="xz" value="$!xz" />
+									</td>
+								</tr>
+								<tr>
+									<td height="35" align="right">
+										信件标题
+									</td>
+									<td align="left">
+										<input name="typedate" id="typedate" type="text"
+											class="tzxx_input" size="16" maxlength="50" />
+									</td>
+								</tr>
+								<tr>
+									<td height="35">
+										&nbsp;
+									</td>
+									<td align="left">
+										<input name="Submit3" type="button" class="btn_search"
+											value="查询" onclick="searchLetter();" />
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+					<td width="15" valign="top">
+						&nbsp;
+					</td>
+					<td valign="top" class="tzxx_bk">
+					#if($!size==0)
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr align="center" valign="middle">
+								<td align="center" colspan="5" height="20px"></td>
+							</tr>
+							<tr align="center" valign="middle">
+								<td align="center" colspan="5">
+									<img src="${base}/images/public/nosearch.jpg" />
+								</td>
+							</tr>
+					</table>
+							#else 
+						<table width="100%" border="0" cellspacing="0" cellpadding="0"
+							class="tzxx_table">
+							<tr>
+								<th width="120" align="center">
+									信件编号
+								</th>
+								<th align="left">
+									信件标题
+								</th>
+								<th width="150" align="center">
+									办理单位
+								</th>
+								<th width="60" align="center">
+									人气
+								</th>
+								<th width="90" align="center">
+									回复时间
+								</th>
+							</tr>
+
+							
+							#foreach($obj in $!listLetter)
+							<tr align="center" width="120">
+								<td>
+									$obj.id
+								</td>
+								<td align="left">
+									<span class="overdot"><a
+										href="${base}/public/letterHF?id=$obj.id" target="_blank">$!StringUtil.substr($obj.zt,22)</a>
+									</span>
+								</td>
+								<td align="center" class="dwname" width="150">
+									$obj.handleunit
+								</td>
+								<td width="60" align="center">
+									$obj.djl
+								</td>
+								<td width="90" align="center">
+									$obj.handletime
+								</td>
+							</tr>
+							#end 
+
+						</table>
+#end
+
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="foot_text1"></div>
+		<div class="foot">
+			<div class="foot_left">
+				<a href="#">网站地图</a> |
+				<a href="#">免责声明</a> |
+				<a href="#">联系我们</a> |
+				<a href="#">在线信息报送</a>
+			</div>
+			<div class="foot_right fontV">
+				安徽省交通运输厅版权所有 地址:合肥市屯溪路528号金环大厦 电话：0551-63623561
+				<br />
+				Email:xxzx@ahjt.gov.cn Fax:0551-63623561 通用网址:安徽交通 皖ICP备07007891号
+			</div>
+			<div class="clear"></div>
+		</div>
+	</body>
+</html>

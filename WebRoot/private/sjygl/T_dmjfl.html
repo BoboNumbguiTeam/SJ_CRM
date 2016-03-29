@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>$!app_name</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!-- 框架 -->
+		<script type='text/javascript'>
+			var CONTEXTPATH = '${base}';
+			var stylePath = '$!stylename';
+		</script>
+		<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+	//定义容器宽度
+	function getWidth(percent) {
+		return document.body.clientWidth * percent;
+	}
+	//加载list数据
+	function loadGrid() {
+		var sjyfl = $("#sjyfl").val(); //取得select的值
+		$("#dg1").treegrid( {
+			width:"auto",
+			height:"auto",
+			nowrap: false,
+			striped: true,
+			border: true,
+			collapsible:false,//是否可折叠的
+			url:"${base}/private/dmjfl/t_dmjfl/list?sjyfl=" + sjyfl,
+			queryParams:{"id":""},//首次查询参数
+			idField:"id",
+			treeField:"name",
+			singleSelect:false,//是否单选
+			rownumbers:true,//行号
+			fit: true,//自动大小
+			fitColumns: true,//行自适应
+			pagination:false,//分页控件
+			loadMsg:'数据加载中...',
+			columns : [ [ {
+				title : '分类名称',
+				field : 'name',
+				width : getWidth(0.32),
+				align : 'left'
+			},{
+				title : '分类编号',
+				field : 'flbh',
+				width : getWidth(0.20),
+				align : 'left'
+			}, {
+				title : '分类编码',
+				field : 'flbm',
+				width : getWidth(0.42),
+				align : 'left'
+			} ] ],
+			frozenColumns:[[
+				{field:"id",checkbox:true}
+			]],
+			onDblClickRow : function(row) {
+				toupdateById(row.id);
+			}
+		});
+//		function formatOper(val, row, index) {
+//			var $_html = "<a href=\"#\" onclick=\"editUser('+index+')\">修改</a>";
+//			return $_html;
+//		}
+	}
+	
+	//增加数据元
+	function add()
+    {
+        var d = new Dialog("Add");
+        d.Width = 500;
+        d.Height = 150;
+        d.Title = "新增数据元";
+        d.URL = "${base}/private/dmjfl/t_dmjfl/toAdd";
+        d.OKEvent = function() {
+            if ($DW.Verify.hasError()) {
+                return;
+            }
+            addSave();
+        }
+        d.onLoad = function() {
+            $DW.$("flmc").focus();
+        }
+        d.show();
+    }
+	
+	function addSave(){     
+		if($DW.Verify.hasError()){
+		  return;
+	    }
+		jQuery.ajax({
+			 	type: 'POST',
+    			url : "${base}/private/dmjfl/t_dmjfl/add" ,
+    			data : $DW.$("#form1").serialize(),
+    			success : function (res) { 
+    				if(res=="true"){
+    					$D.close();
+    					Dialog.alert("添加成功！");
+    					
+    					loadGrid();
+    				}else{
+    					Dialog.alert("添加失败！");
+    				}
+    				 
+    				return false;
+    			},
+    			fail : function(res) {
+    				Dialog.alert("系统错误?!");
+    			}
+    		}); 
+	}
+
+	//转到修改页面by ID
+	function toupdateById(id)
+	{
+		var d = new Dialog("Update");
+		d.Width = 500;
+		d.Height = 100;
+		d.Title = "修改菜单";
+		d.URL = "${base}/private/dmjfl/t_dmjfl/toupdate?id=" + id;
+		d.onLoad = function(){
+			$DW.$Z("flmc").focus();
+		}
+		d.OKEvent = function(){
+			updateSave();
+		};
+		d.show();
+	}
+	
+	//转到修改页面
+    function toupdate()
+    {
+    	var checkboxs = $("input[name='id']:checked");
+		if (checkboxs.length <= 0) {
+			Dialog.alert("请选择编辑的记录");
+			return false;
+		}
+		if (checkboxs.length > 1) {
+			Dialog.alert("只能选择一条记录");
+			return false;
+		}
+		var id = checkboxs.val();
+        var d = new Dialog("Update");
+        d.Width = 500;
+        d.Height = 100;
+        d.Title = "修改菜单";
+        d.URL = "${base}/private/dmjfl/t_dmjfl/toupdate?id=" + id;
+       	d.onLoad = function(){
+       		$DW.$Z("flmc").focus();
+       	}
+       	d.OKEvent = function(){
+       		updateSave();
+       	};
+       	d.show();
+    }
+	
+    function updateSave(){     
+ 		 if($DW.Verify.hasError()){
+ 		  return;
+ 	     }
+ 		 jQuery.ajax({
+ 				type: 'POST',
+     			url : "${base}/private/dmjfl/t_dmjfl/update" ,
+     			data : $DW.$("#form1").serialize(),
+     			success : function (res) {
+     				if(res!=""){
+     					$D.close();
+     					Dialog.alert("修改成功！");
+     					loadGrid();
+     				}else{
+     					Dialog.alert("修改失败！");
+     				}
+     				return false;
+     			},
+     			fail : function(res) {
+     				Dialog.alert("系统错误?!");
+     			}
+     		});
+ 	}
+
+	//ajax提交表单
+	function save() {
+		$.ajax( {
+			type : 'POST',
+			url : "${base}/private/sys/article/save",
+			data : $DW.$("#articleForm").serialize(),
+			success : function(res) {
+				if (res == "true") {
+					$D.close();
+					Dialog.alert("添加成功！");
+					loadGrid();
+				} else {
+					Dialog.alert("添加失败！");
+				}
+			},
+			fail : function(res) {
+				Dialog.alert("系统错误!");
+			}
+		});
+	}
+
+	
+	//删除数据元分类
+	function del() {
+		var id_array = new Array();
+		$("input[name='id']:checked").each(function() {
+			id_array.push($(this).val());//向数组中添加元素
+			});
+		if (id_array.length > 0) {
+			Dialog.confirm("您确认要删除吗？", function() {
+				//
+					var url = "${base}/private/dmjfl/t_dmjfl/deleteIds?ids="
+							+ id_array;
+					$.ajax( {
+						url : url,
+						success : function(result) {
+							if (result == 'true') {
+								Dialog.alert("删除成功");
+								loadGrid();
+							} else {
+								Dialog.alert("删除失败");
+								loadGrid();
+							}
+						},
+						error : function(e) {
+							alert(e);
+						}
+					});
+				});
+		} else {
+			Dialog.alert("请至少选择一条记录！");
+			return;
+		}
+	}
+	
+	function view()
+    {
+    	var checkboxs = $("input[name='id']:checked");
+		if (checkboxs.length <= 0) {
+			Dialog.alert("请选择查看的记录");
+			return false;
+		}
+		if (checkboxs.length > 1) {
+			Dialog.alert("只能选择一条记录");
+			return false;
+		}
+		var id = checkboxs.val();
+        var d = new Dialog("View");
+        d.Width = 500;
+        d.Height = 100;
+        d.Title = "查看菜单";
+        d.URL = "${base}/private/dmjfl/t_dmjfl/view?id=" + id;
+       	d.show();
+    }
+
+	function initButton(){
+		Page.initBtn();
+		$!initBtn
+	}
+
+
+	//页面载入
+	Page.onLoad(function() {
+		loadGrid();
+		initButton();
+	});
+</script>
+	</head>
+	<body leftmargin="0" topmargin="0" class="easyui-layout">
+	<form name="form1" id="form1" method="post">
+		<input type="hidden" name="checkids" id="checkids" value="">
+		<div region="north" border="false" style="overflow:hidden; padding:10px 10px 0px 10px">
+			<table width="100%" border="0" cellspacing="0" cellpadding="6">
+				<tr>
+					<td style="padding: 5px 8px 4px;">
+						&nbsp;数据元分类：&nbsp;
+						<select id="sjyfl" name="sjyfl">
+							<option value="">全部</option>
+							#foreach($obj in $list)
+								<option value="$!obj">
+									<script type="text/javascript">document.write(gettreecode("$!obj"))</script>
+									$!flList.get("$!obj")
+								</option>
+							#end
+						</select>
+						<script type="text/javascript">selected(form1.flbh,"$!flbh")</script>
+						<input class="button" type="button" name="Submitbutton" id="Submitbutton" onClick="loadGrid();" value="查询" />
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"
+								class="table_auto czbutton_bk margin_top5">
+							<tr>
+								<td>
+									<div class="czbutton">
+										<ul>
+											<li>
+												<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+												   hidefocus='true' tabindex='-1' onselectstart='return false'
+												   id='BtnAdd' onClick="add();"><img
+														src="${base}/include/img/cz_add.png" width="14"
+														height="14"/><b>新建&nbsp;</b>
+												</a>
+											</li>
+											<li>
+												<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+												   hidefocus='true' tabindex='-1' onselectstart='return false'
+												   id='BtnUpdate' onClick="toupdate();"><img
+														src="${base}/include/img/bj.png" width="14"
+														height="14"/><b>编辑&nbsp;</b>
+												</a>
+											</li>
+											<li>
+												<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+												   hidefocus='true' tabindex='-1' onselectstart='return false'
+												   id='BtnDel' onClick="del();"><img
+														src="${base}/include/img/cz_del.png" width="14"
+														height="14"/><b>删除&nbsp;</b>
+												</a>
+											</li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div region="center" border="false" style="width:100%;height:100%; padding:0px 10px 10px;">
+			<div id="dg1" style="width: 100%; height: 100%;"></div>
+		</div>
+	</form>
+	</body>
+</html>

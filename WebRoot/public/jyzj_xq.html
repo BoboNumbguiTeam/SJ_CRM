@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+		<script src="${base}/include/js/validation.js"></script>
+		<script type="text/javascript">
+	function setStr() {
+
+		var username = document.getElementById("username").value;
+		var note = document.getElementById("note").value;
+		var ext3 = document.getElementById("ext3").value;
+		username = JTrim(username);
+		note = JTrim(note);
+		ext3 = JTrim(ext3);
+		document.getElementById("username").value = username;
+		document.getElementById("note").value = note;
+		document.getElementById("ext3").value = ext3;
+
+	}
+	function doEncode() {//解码
+		var username = document.getElementById("username").value;
+		var note = document.getElementById("note").value;
+		var ext3 = document.getElementById("ext3").value;
+		username = htmlEncode(username);
+		note = htmlEncode(note);
+		ext3 = htmlEncode(ext3);
+		document.getElementById("username").value = username;
+		document.getElementById("note").value = note;
+		document.getElementById("ext3").value = ext3;
+	}
+	//新建保存
+	function addSave() {
+		var linktel = $("#ext").val();
+		var linkmail = $("#ext2").val();
+		var linkmailreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		var linktelreg = /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;
+		setStr();
+		if ($("#username").val() == "" || $("#username").val() == "限制输入20字") {
+			$("#username").val("限制输入20字");
+			Dialog.alert("姓名不能为空！");
+			return false;
+		} else if ($("#note").val() == "" || $("#note").val() == "限制输入5000字") {
+			$("#note").val("限制输入5000字");
+			Dialog.alert("内容不能为空！");
+			return false;
+		} else if ($("#ext3").val() == "" || $("#ext3").val() == "限制输入50字") {
+			$("#ext3").val("限制输入50字");
+			Dialog.alert("标题不能为空！");
+			return false;
+		} else if ($("#ext").val() != "" && !linktelreg.test(linktel)) {
+			Dialog.alert("请输入一个有效的电话号！");
+			return false;
+		} else if ($("#ext2").val() != "" && !linkmailreg.test(linkmail)) {
+			Dialog.alert("请输入一个有效的邮箱！");
+			return false;
+		} else {
+			doEncode();
+			jQuery.ajax( {
+				type : 'POST',
+				url : "${base}/public/addsave",
+				data : $("#form1").serialize(),
+				success : function(res) {
+					if (res == "true") {
+						Dialog.alert("添加成功！");
+						$("#username").val("");
+						$("#note").val("");
+						$("#ext3").val("");
+					} else {
+						Dialog.alert("添加失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+	}
+</script>
+	</head>
+	<body>
+		#parse("public/top.html")
+
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					您当前的位置：
+					<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/jyzj" >意见征集</a>
+				</div>
+			</div>
+			<div class="site_nr">
+				<table width="100%" border="0" cellspacing="0">
+					<tr>
+						<td align="center">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td height="60" align="center" class="xqye_24">
+										$!t_sonlicitation.title #if($!nowstatus==1)
+										<img src="../images/public/yjzj_2a.jpg" width="70" height="25"
+											align="absmiddle" />
+										#else
+										<img src="${base}/images/public/yjzj_2.jpg" width="71"
+											height="25" align="absmiddle" />
+										#end
+									</td>
+								</tr>
+								<tr>
+									<td height="30" align="center" valign="top">
+										<span class="yjzj_14">征集时间：$!t_sonlicitation.btime至$!t_sonlicitation.etime</span>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<table class="table margin_bottom10" width="98%" border="0"
+								cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="center" valign="top" bgcolor="#FFFFFF">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td width="112" align="center" class="yjzj">
+													<a href="${base}/public/XQdetail?id=$!t_sonlicitation.id"
+														class="yjzjon">征集内容</a>
+												</td>
+												<td width="112" align="center" class="yjzj">
+													<a
+														href="${base}/public/JGdetail?id=$!t_sonlicitation.id&crPage=1&pageSize=10"
+														class="yjzj">结果公示</a>
+												</td>
+												<td height="29" class="yjzj_l3">
+													&nbsp;
+												</td>
+											</tr>
+										</table>
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="center" valign="top">
+													<table width="96%" border="0" align="center"
+														cellpadding="0" cellspacing="15">
+														<tr>
+															<td align="left" class="xqye_14">
+																$!t_sonlicitation.note
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+										<!--										<table width="93%" border="0" cellspacing="0">-->
+										<!--											<tr>-->
+										<!--												<td height="35" align="left" valign="top">-->
+										<!--													<strong>附件：</strong><a href="#" class="zxft1">安徽省道路运输管理行政处罚自由裁量权细化标准征求意见稿.doc</a>-->
+										<!--												</td>-->
+										<!--											</tr>-->
+										<!--										</table>-->
+										#if($!nowstatus==0)
+										<form name='form1' id="form1" method='post'>
+											<table class=" margin_bottom30" width="93%" border="0"
+												cellspacing="0" cellpadding="0">
+												<tr>
+													<td height="50" align="left">
+														<span class="zxft_18"><img
+																src="${base}/images/public/zdft_2.jpg" width="6"
+																height="11" hspace="10" />意见征集 </span><span class="yjzj_12">[*为必填项，真诚地欢迎您为我们的工作提出建议和意见，
+															我们向您表示衷心感谢。]</span>
+													</td>
+												</tr>
+												<tr>
+													<td style="background:url(${base}/images/public/yjzj_7.jpg) repeat-x" height="6">
+														
+													</td>
+												</tr>
+												<tr>
+													<td align="center" bgcolor="#F0F0F0">
+														<table class="margin_top12" width="92%" border="0"
+															cellpadding="2" cellspacing="0" bgcolor="#F0F0F0">
+															<tr>
+																<td width="7%" align="center" class="zxft_12wz">
+																	<strong>姓名<br /> </strong>
+																	<input type="hidden" name="sid" id="sid"
+																		value="$!t_sonlicitation.id" />
+																</td>
+																<td width="93%" align="left">
+																	<input name="username" id="username" type="text"
+																		class="yjzj_input" size="45" maxlength="20"
+																		onclick="if(this.value=='限制输入20字')this.value='';"
+																		value="限制输入20字" />
+																	<span class="yjzj_12">*</span>
+																</td>
+															</tr>
+															<tr>
+																<td align="center" class="zxft_12wz">
+																	<strong>是否公开<br /> </strong>
+																</td>
+																<td align="left">
+																	<select name="ispublic" id="ispublic">
+																		<option value="0">
+																			否
+																		</option>
+																		<option value="1">
+																			是
+																		</option>
+																	</select>
+																</td>
+															</tr>
+															<tr>
+																<td align="center" class="zxft_12wz">
+																	<strong>电话<br /> </strong>
+																</td>
+																<td align="left">
+																	<input name="ext" id="ext" type="text"
+																		class="yjzj_input" size="45" />
+																</td>
+															</tr>
+															<tr>
+																<td align="center" class="zxft_12wz">
+																	<strong>邮箱<br /> </strong>
+																</td>
+																<td align="left">
+																	<input name="ext2" id="ext2" type="text"
+																		class="yjzj_input" size="45" />
+																	<input name="auditstatus" id="auditstatus"
+																		type="hidden" value="1" />
+																</td>
+															</tr>
+															<tr>
+																<td align="center" class="zxft_12wz">
+																	<strong>标题<br /> </strong>
+																</td>
+																<td align="left">
+																	<input name="ext3" id="ext3" type="text"
+																		class="yjzj_input" size="70" maxlength="50"
+																		onclick="if(this.value=='限制输入50字')this.value='';"
+																		value="限制输入50字" />
+																	<span class="yjzj_12">* </span>
+																</td>
+															</tr>
+															<tr>
+																<td align="center" valign="top" class="zxft_12wz">
+																	<strong>意见</strong>
+																</td>
+																<td align="left">
+																	<textarea name="note" cols="80" rows="5" id="note"
+																		class="yjzj_input" style="width: 510px;"
+																		onclick="if(this.value=='限制输入5000字')this.value='';"
+																		onkeyup="checkLength(this,5000);">限制输入5000字</textarea>
+																	<span class="yjzj_12">*</span>
+																	<span class="zxft_12wz" id="notespan"> </span>
+																</td>
+															</tr>
+															<!--														<tr>-->
+															<!--															<td align="center" class="zxft_12wz">-->
+															<!--																<strong>验证码</strong>-->
+															<!--															</td>-->
+															<!--															<td align="left">-->
+															<!--																<input name="textfield223" type="text"-->
+															<!--																	class="yjzj_input" size="20" />-->
+															<!--																<img src="${base}/images/public/yjzj_8.jpg" width="53"-->
+															<!--																	height="15" hspace="10" />-->
+															<!--																<span class="yjzj_12">* </span><a href="#"><span-->
+															<!--																	class="zxft_12wz">看不清</span>-->
+															<!--																</a>-->
+															<!--															</td>-->
+															<!--														</tr>-->
+															<tr>
+																<td height="40" colspan="2" align="center">
+																	<span class="xqye_14"> <input name="button"
+																			type="button" class="btn_search" value="提交"
+																			onclick="addSave();" /> <input name="button2"
+																			type="reset" class="btn_search" value="重置" /> </span>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+										</form>
+										#end
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		#parse("public/foot.html")
+	</body>
+</html>

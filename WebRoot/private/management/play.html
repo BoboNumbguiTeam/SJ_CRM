@@ -1,0 +1,10 @@
+#if($lydz&&$lydz.size()>=1)
+#foreach($obj in	$lydz)
+<embed loop="" autostart="false" src="$!obj"
+       width="500" height="68" type="application/x-mplayer2" showstatusbar="1" showpositioncontrols="0" invokeurls="0"
+       enablecontextmenu="0">
+ </embed>
+ #end
+#else
+  语音文件不存在！
+#end

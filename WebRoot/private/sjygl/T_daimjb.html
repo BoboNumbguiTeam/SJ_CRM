@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>$!app_name</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!-- 框架 -->
+		<script type='text/javascript'>
+			var CONTEXTPATH = '${base}';
+			var stylePath = '$!stylename';
+		</script>
+		<link href="${base}/include/css/$!stylename/style.css" rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css" rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<!-- 树 -->
+		<script type="text/javascript" src="${base}/include/controls/ztree/jquery.ztree.core-3.5.min.js"></script>
+		<link rel="stylesheet" href="${base}/include/controls/ztree/zTreeStyle/zTreeStyle.css" type="text/css">
+		<style type="text/css">
+			.ztree li span.button.pIcon01_ico_open{margin-right:2px; background: url(${base}/images/icons/xjdw.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+			.ztree li span.button.pIcon01_ico_close{margin-right:2px; background: url(${base}/images/icons/danwei.gif) no-repeat scroll 0 0 transparent; vertical-align:top; *vertical-align:middle}
+		</style>
+		<script type="text/javascript">
+			function getWidth(percent){
+		       return document.body.clientWidth*percent;
+			}
+			//设置代码集树参数
+			var setting = {
+				data: {  
+					simpleData: {  
+						enable: true  
+					}  
+				}, 	
+				async: {
+					enable: true,
+                    url:"${base}/private/dmj/t_daimjb/tree",
+                    autoParam:["flbh"]
+                },
+                view:{
+                  	nameIsHTML: true
+                }
+			};
+			//初始化代码集树
+			function initTree(){
+				var myTree =jQuery.fn.zTree.init(jQuery("#treeDemo"), setting);
+			}
+			//加载列表数据
+			function loadGrid(flbh){
+				$("#dg1").datagrid({  
+        	        width:"auto",
+        	   		height:"auto",
+        	        nowrap: false,  
+        	        striped: true,  
+        	        border: true,  
+        	        collapsible: false,//是否可折叠的  
+        	        fit: true,//自动大小  
+        	        url:"${base}/private/dmj/t_daimjb/listAll",
+        	        queryParams:{"flbh":flbh},		
+        	        //sortName: 'code',  
+        	        //sortOrder: 'desc',  
+        	        remoteSort:false,   
+        	        idField:"id",
+        	        singleSelect:false,//是否单选  
+        	        pagination:true,//分页控件  
+        	        rownumbers:true,//行号  
+        	        fitColumns: true,//行自适应
+					pageSize: 10,
+        	        pageList:[5,10,15,20,30,40,50],
+        	        loadMsg:'数据加载中...',
+        	        onDblClickRow:function(rowIndex,row)
+        	        {
+						//双击行事件
+						BtnUpdateById(row.id);
+        	        },
+        	        columns : [ [
+        	 					{field : "f_vc_daimmc",title : "代码名称",width : 120},
+        	 					{field : "f_vc_daimz1",title : "数字字典",width : 80},
+        	 					{field : "f_vc_daimz2",title : "字母编码",width : getWidth(0.10)} ,
+        	 					{field : "f_vc_daimjbj",title : "数据状态",width : getWidth(0.15),
+            	 					formatter:function(value,rec,index){
+	        	 						if(rec.f_vc_daimjbj == 1) {
+											return '激活';
+		            					} else {
+		            						return '冻结';
+		            					}
+            	 					}
+        	 					}  
+        	 					] ],
+        	        frozenColumns:[[  
+        	            {field:"id",checkbox:true}
+        	        ]]
+        	    });  
+        	    //设置分页控件  
+        	    var p = $("#dg1").datagrid("getPager");  
+        	    $(p).pagination({  
+        	        beforePageText: "第",//页数文本框前显示的汉字  
+        	        afterPageText: "页    共 {pages} 页",  
+        	        displayMsg: "当前显示 {from} - {to} 条记录   共 {total} 条记录",  
+        	        onBeforeRefresh:function(){ 
+        	        } 
+        	    }); 
+			}
+			function list(flbh){
+				Page.setValue("ssfl",flbh);
+				loadGrid(flbh);
+	        }
+
+			function BtnUpdateById(id) {
+				var d = new Dialog("Update");
+				d.Width = 430;
+				d.Height = 320;
+				d.Title = "修改代码集";
+				d.URL = "${base}/private/dmj/t_daimjb/toupdate?id=" + id;
+				d.OKEvent = function() {
+					if($DW.Verify.hasError()){
+						return;
+					}
+					updateSave();
+				};
+				d.show();
+			}
+
+			function BtnUpdate() {
+				var arr = $('#dg1').datagrid('getSelected');
+				if (!arr || arr.length == 0) {
+					Dialog.alert("请先选择要编辑的数据！");
+					return;
+				}
+				var checkboxs = $("input[name='id']:checked");
+				if (checkboxs.length > 1) {
+					Dialog.alert("只能选择一条记录");
+					return false;
+				}				
+				var d = new Dialog("Update");
+				d.Width = 430;
+				d.Height = 320;
+				d.Title = "修改代码集";
+				d.URL = "${base}/private/dmj/t_daimjb/toupdate?id=" + arr.id;
+				d.OKEvent = function() {
+					if($DW.Verify.hasError()){
+				 		return;
+				 	}
+					updateSave();
+				};
+				d.show();
+			}
+			function updateSave(){     
+		 		 jQuery.ajax({
+		 				type: 'POST',
+		     			url : "${base}/private/dmj/t_daimjb/update" ,
+		     			data : $DW.$("#form1").serialize(),
+		     			success : function (res) { 
+		     				if(res != ""){
+		     					$D.close();
+		     					Dialog.alert("修改成功！");
+		     					loadGrid(Page.getValue("ssfl"));
+		     				}else{
+		     					Dialog.alert("修改失败！");
+		     				}
+		     				return false;
+		     			},
+		     			fail : function(res) {
+		     				Dialog.alert("系统错误?!");
+		     			}
+		     		});
+		 	}
+		 	function BtnAdd(){
+		 		var d = new Dialog("Add");
+		        d.Width = 430;
+		        d.Height = 320;
+		        d.Title = "新增代码集";
+		        d.URL = "${base}/private/dmj/t_daimjb/toAdd?flbh="+ Page.getValue("ssfl");
+		        d.OKEvent = function() {
+		            if ($DW.Verify.hasError()) {
+		                return;
+		            }
+		            addSave();
+		        }
+		        d.onLoad = function() {
+		            $DW.$("flmc").focus();
+		        }
+		        d.show();
+			}
+		 	function addSave(){   
+		 		 jQuery.ajax({
+		 				type: 'POST',
+		     			url : "${base}/private/dmj/t_daimjb/add" ,
+		     			data : $DW.$("#form1").serialize(),
+		     			success : function (res) {
+		     				if(res != ""){
+		     					$D.close();
+		     					Dialog.alert("新增成功！");
+		     					loadGrid(Page.getValue("ssfl"));
+		     				}else{
+		     					Dialog.alert("新增失败！");
+		     				}
+		     				return false;
+		     			},
+		     			fail : function(res) {
+		     				Dialog.alert("系统错误?!");
+		     			}
+		     		});
+		 	}
+		 	function BtnDel(){
+		 		var id_array = new Array();
+				$("input[name='id']:checked").each(function() {
+					id_array.push($(this).val());//向数组中添加元素
+				});
+				if (id_array.length > 0) {
+					Dialog.confirm("您确认要删除吗？", function() {
+							var url = "${base}/private/dmj/t_daimjb/delete?ids=" + id_array;
+							$.ajax( {
+								url : url,
+								success : function(result) {
+									if (result == 'true') {
+										Dialog.alert("删除成功");
+										loadGrid(Page.getValue("ssfl"));
+									} else {
+										Dialog.alert("删除失败");
+									}
+								},
+								error : function(e) {
+									alert(e);
+								}
+							});
+						});
+				} else {
+					Dialog.alert("请至少选择一条记录！");
+					return;
+				}
+			}
+
+			function initButton(){
+				Page.initBtn();
+				$!initBtn
+			}
+
+			Page.onLoad(function() {
+				initTree();
+				loadGrid("");
+				initButton();
+			});
+			$(window).resize(function() {
+				clearTimeout(timer);
+				timer = setTimeout(function() {
+					$('#dg1').treegrid('resize');
+					$('div.panel-body').css('width', 'auto');
+				}, 100);
+			});
+		</script>
+	</head>
+	<body leftmargin="0" topmargin="0" class="easyui-layout">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			<tr valign="top">
+				<td>
+					<!-- 代码集 tree begin -->
+					<table width="200" height="100%" border="0" cellpadding="0"
+						cellspacing="0" style="margin-right: 6px;" class="blockTable">
+						<tr>
+							<td class="blocktitle">
+								<table width="100%" border="0" align="center" cellpadding="0"
+									cellspacing="0">
+									<tr>
+										<td width="40" height="33" align="center">
+											<img src="${base}/images/icons/base.png" />
+										</td>
+										<td height="33" class="font14">
+											代码集分类
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div ztype='_Tree'
+									style='-moz-user-select: none; height: 460px; width: 200px; overflow: scroll;'
+									id='tree1' class='treeItemN'>
+									<ul id="treeDemo" class="ztree"></ul>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<!-- 代码集 tree end -->
+				</td>
+				<td width="100%" valign="top">
+					<form name='form1' id="form1" method='post'>
+						<input type="hidden" name="id" id="id" value="">
+						<input type="hidden" name="ssfl" id="ssfl" value="">
+						<input type="hidden" name="checkids" id="checkids" value="">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0"
+							class="blockTable" style="border-collapse: separate; border-spacing: 0;">
+							<tr>
+								<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="6">
+										<tr>
+											<td>
+												<!-- 按钮区域begin -->
+												<table width="100%" border="0" align="center"
+													cellpadding="0" cellspacing="0"
+													class="table_auto czbutton_bk margin_top5">
+													<tr>
+														<td>
+															<div class="czbutton">
+																<ul>
+																	<li>
+																		<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+																		   hidefocus='true' tabindex='-1' onselectstart='return false'
+																		   id='BtnAdd' onClick="BtnAdd();"><img
+																				src="${base}/include/img/cz_add.png" width="14"
+																				height="14"/><b>新建&nbsp;</b>
+																		</a>
+																	</li>
+																	<li>
+																		<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+																		   hidefocus='true' tabindex='-1' onselectstart='return false'
+																		   id='BtnUpdate' onClick="BtnUpdate();"><img
+																				src="${base}/include/img/bj.png" width="14"
+																				height="14"/><b>编辑&nbsp;</b>
+																		</a>
+																	</li>
+																	<li>
+																		<a href='javascript:void(0);' ztype='zPushBtn' class='zPushBtn'
+																		   hidefocus='true' tabindex='-1' onselectstart='return false'
+																		   id='BtnDel' onClick="BtnDel();"><img
+																				src="${base}/include/img/cz_del.png" width="14"
+																				height="14"/><b>删除&nbsp;</b>
+																		</a>
+																	</li>
+																</ul>
+															</div>
+														</td>
+													</tr>
+												</table>
+												<!-- 按钮区域end -->
+											</td>
+										</tr>
+										<tr>
+											<td height="400">
+												<!-- 代码集列表 begin-->
+												<table width="100%" height="100%" id="dg1" size="10"
+													cellpadding="2" cellspacing="0">
+													<tr>
+														<td></td>
+													</tr>
+												</table>
+												<!-- 代码集列表 end-->
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

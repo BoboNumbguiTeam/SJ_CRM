@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html style="overflow:auto">
+	<head>
+		<title>$!app_name</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<!-- 框架 -->
+		<script type='text/javascript'>
+		var CONTEXTPATH = '${base}';
+		var stylePath = '$!stylename';
+		</script>
+		<link rel="stylesheet" type="text/css"
+			href="${base}/include/css/$!stylename/style.css" />
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<!-- 日期控件  -->
+		<script type="text/javascript"
+			src="${base}/include/controls/my97/WdatePicker.js"></script>
+		<link rel="stylesheet"
+			href="${base}/include/controls/my97/skin/WdatePicker.css"
+			type="text/css">
+			<style type="text/css">
+		<!--
+		table.blz_data{ border-collapse:collapse; }
+		.blz_data td{ border:#D3D3D3 solid 1px; padding:2px; line-height: 20px;}
+		/*中间内容——右边内容*/
+		
+		-->
+		</style>
+		<script>
+	function getWidth(percent) {
+		return document.body.clientWidth * percent;
+	}
+	function loadData(){
+				form1.submit();
+			}
+	</script>
+	</head>
+		<body style="overflow:auto" leftmargin="0" topmargin="0" class="easyui-layout">
+		<form name='form1' id="form1" method='post'>
+			<div region="north" border="false"
+				style="overflow: hidden; padding: 10px 10px 0px 10px">
+				<table width="100%" border="0" cellspacing="0" cellpadding="6">
+					<tr>
+						<td width="80" align="right" nowrap>
+							开始时间：
+						</td>
+						<td width="120">
+							<input id="startdate" name="startdate" type="text" size="12"
+								onfocus="WdatePicker({el:$dp.$('startdate')})"
+								value="$!startdate" onclick="this.value='';"/>
+							<img onclick="WdatePicker({el:$dp.$('startdate')})"
+								src="${base}/include/controls/my97/skin/datePicker.gif"
+								width="16" height="22" align="absmiddle">
+						</td>
+						<td width="80" align="right" nowrap>
+							结束时间：
+						</td>
+						<td width="150">
+							<input id="enddate" name="enddate" type="text" size="12"
+								onfocus="WdatePicker({el:$dp.$('enddate')})" value="$!enddate"  
+								onclick="this.value='';"/>
+							<img onclick="WdatePicker({el:$dp.$('enddate')})"
+								src="${base}/include/controls/my97/skin/datePicker.gif"
+								width="16" height="22" align="absmiddle">
+						</td>
+						<td id="searchBtn" align="left" valign="bottom">
+							<input class="button" type="submit" id="dosearch" name="dosearch" value="查   询"
+								 />
+									&nbsp;&nbsp;&nbsp;&nbsp;<input class="button" type="button" id="dosearch" name="dosearch" value="导出Excel"
+								onclick="toprintln();" />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<br/><br/>
+			<div id="printnote">
+			<div region="center" border="false"
+				style="width: 100%; height: 100%; padding: 0px 10px 10px;">
+				<table class="blz_data" width="100%" >
+				<tr>
+					<td align="left" bgcolor="#FAFAFA" width="20px">
+						&nbsp;
+					</td>
+					<td align="left" bgcolor="#FAFAFA" width="32%">
+						受理员
+					</td>
+					<td align="left" bgcolor="#FAFAFA" width="32%">
+						受理件数
+					</td>
+					<td align="left" bgcolor="#FAFAFA" width="32%">
+						直办件数
+					</td>
+						</tr>
+						#foreach($user in $!userList)
+						<tr>
+						<td align="left" bgcolor="#FAFAFA">
+								$velocityCount
+						</td>
+						<td align="left" bgcolor="#FAFAFA">
+								$!user
+						</td>
+						<td align="left" bgcolor="#FFFFFF">
+							#if($!slMap.get("$!user"))$!slMap.get("$!user")#else 0 #end
+						</td>
+						<td align="left" bgcolor="#FFFFFF">
+							#if($!zbMap.get("$!user"))$!zbMap.get("$!user")#else 0 #end
+						</td>
+						</tr>
+						#end
+				</table>
+			</div>
+			</div>
+		</form>
+		<form action="${base}/DownFile" name="printform"
+						method="post">
+			<textarea rows="" cols="" style="display: none;" name="htmlbody"></textarea>
+		</form>
+	</body>
+<script type="text/javascript">
+function tosearch() {
+	form1.curPage = '1';
+	form1.submit();
+}
+function toprintln() {
+	printform.htmlbody.value = printnote.innerHTML;
+	printform.submit();
+}
+</script>
+#if($msg)
+<script>
+alert('$!msg');</script>
+#end
+</html>

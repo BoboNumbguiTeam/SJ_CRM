@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$!app_name</title>
+		<!-- 框架 
+		<link href="${base}/include/css/default.css" rel="stylesheet"
+			type="text/css" />-->
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+			<script>
+			function nextPage(startNum){
+			startNum=startNum+5;
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ startNum + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			function prePage(startNum){
+			startNum=startNum-5;
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ startNum + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			function countPage(count){
+			var startNum=1;
+			if(count%5){
+				startNum=(Math.floor(count/5)-1)*5+1;
+			}else{
+				startNum=Math.floor(count/5)*5+1;
+			}
+			window.open("${base}/public/listLetter?xz=$!xz&crPage="+ count + "&pageSize=15&startNum="+startNum, "_self", "");
+			}
+			
+			</script>
+</head>
+<body >
+
+#parse("public/top.html")
+<div class="site_body">
+<div class="site_postion">
+  <div class="postion_icon ">您当前的位置：<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/zxft" >在线访谈</a>-&gt;
+					#if($!status==1)
+					<a href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15" >访谈预告</a>
+					#end #if($!status==2)
+					<a href="${base}/public/listZXFT?status=2&crPage=1&pageSize=15" >本期访谈</a>
+					#end #if($!status==3)
+					<a href="${base}/public/listZXFT?status=3&crPage=1&pageSize=15" >往期访谈</a>
+					#end #if($!status==4)
+					<a href="${base}/public/listZXFT?status=4&crPage=1&pageSize=15" >年度计划</a>
+					#end
+</div></div>
+<div class="site_nr">
+  <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="261" align="left" valign="top">
+      <table width="248" border="0" cellpadding="0" cellspacing="0" class="table">
+          <tr>
+            <td align="center" valign="top" bgcolor="#FFFFFF">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td height="47" align="center"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="30" align="center"><img src="${base}/images/public/jtxw_dit.jpg" width="12" height="13" /></td>
+                        <td align="left" class="jtxw_tit">在线访谈</td>
+                      </tr>
+                  </table></td>
+                </tr>
+                <tr>
+                  <td height="28" align="center" background="${base}/images/public/jtxw_4.jpg">&nbsp;</td>
+                </tr>
+              </table>
+            #if($!status==1)
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu1">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15"  class="jtxw">访谈预告</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+            
+              #else
+               <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu2">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=1&crPage=1&pageSize=15"  class="jtxw2">访谈预告</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+               #end
+                  #if($!status==2)
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu1">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=2&crPage=1&pageSize=15" class="jtxw">本期访谈</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+              #else
+               <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu2">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=2&crPage=1&pageSize=15"  class="jtxw2">本期访谈</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+               #end
+                  #if($!status==3)
+            <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu1">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=3&crPage=1&pageSize=15"  class="jtxw">往期访谈</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+              #else
+               <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu2">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=3&crPage=1&pageSize=15" class="jtxw2">往期访谈</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+               #end
+                  #if($!status==4)
+           <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu1">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=4&crPage=1&pageSize=15"  class="jtxw">年度计划</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+              #else
+               <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" class="jtxw_menu2">
+                  <tr>
+                    <td align="right"><table width="67%" height="20" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="left"><a href="${base}/public/listZXFT?status=4&crPage=1&pageSize=15"  class="jtxw2">年度计划</a></td>
+                        </tr>
+                    </table></td>
+                  </tr>
+                </table>
+               #end
+               
+                
+             
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+              </table></td>
+          </tr>
+      </table></td>
+      <td align="center" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="120" align="center" bgcolor="#0077C9" class="jtxw_tit"><font color="#FFFFFF">
+          #if($!status==1)
+          	访谈预告
+          #end
+          #if($!status==2)
+          	本期访谈
+          #end
+          #if($!status==3)
+          	往期访谈
+          #end
+          #if($!status==4)
+          	年度计划
+          #end
+          
+          </font></td>
+          <td height="34" background="${base}/images/public/lb01.jpg">&nbsp;</td>
+          <td width="5"><img src="${base}/images/public/lb02.jpg" width="5" height="34" /></td>
+        </tr>
+      </table>
+        <div class="page_artlist">
+            <ul>
+        #foreach($obj in $!listZXFT)
+        #if($velocityCount==5)
+        <li><a href="${base}/public/xqye?id=$obj.id&status=$!status">$!StringUtil.substr($obj.theme,42)</a><span class="timespan">$obj.createtime</span></li>
+        </ul><ul>
+        #else
+         <li><a href="${base}/public/xqye?id=$obj.id&status=$!status">$!StringUtil.substr($obj.theme,42)</a><span class="timespan">$obj.createtime</span></li>
+        #end
+          #end
+            </ul>
+          </div>
+        <!--分页代码-->
+         <div class="pageation">
+							<span class="pagetotle">共$!count页</span>
+							<span class="home"><a
+								href="${base}/public/listLetter?xz=$!xz&crPage=1&pageSize=15&startNum=1">首页</a>
+							</span>
+							<span class="pagenum"> #if($!startNum - 5 lt 0) #else <a
+								href="javascript:void(0);" onclick="prePage($!startNum,$!xz);">&lt;</a>
+								#end #foreach($foo in [$!startNum..$!count]) #set ($option =
+								$velocityCount + $!startNum - 1) #if($velocityCount lt 6)
+								#if($option==$!crPage) <a
+								href="${base}/public/listLetter?xz=$!xz&crPage=$!crPage&pageSize=15&startNum=$!startNum"
+								class="this">$!crPage</a> #else <a
+								href="${base}/public/listLetter?xz=$!xz&crPage=$velocityCount&pageSize=15&startNum=$!startNum">$option</a>
+								#end #end #end #if($!startNum + 5 gt $!count) #else <a
+								href="javascript:void(0);" onclick="nextPage($!startNum,$!xz);">&gt;</a>
+								#end</span>
+							<span class="end"><a href="javascript:void(0);"
+								onclick="countPage($!count,$!xz);">尾页</a> </span>
+							<span class="gopage">转到 <select id="select1"
+									onchange="setonchange()">
+									#foreach($foo in [1..$!count])
+									<option value="$velocityCount">
+										$velocityCount
+									</option>
+									#end
+								</select> 页</span>
+							<script>
+								function setonchange() {
+									if ($("#select1").val() != "")
+										var crPage = $("#select1").val();
+										var startNum=1;
+									if(crPage%5==0){
+										startNum=(Math.floor(crPage/5)-1)*5+1;
+									}else{
+										startNum=Math.floor(crPage/5)*5+1;
+									}
+									window.open("${base}/public/listLetter?xz=$!xz&crPage="
+											+ crPage + "&pageSize=15&startNum="+startNum, "_self", "");
+								}
+							</script>
+						</div>
+
+        <!--分页代码 end-->
+      </td>
+    </tr>
+  </table>
+</div>
+</div>
+	#parse("public/foot.html")
+</body>
+</html>

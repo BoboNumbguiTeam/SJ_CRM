@@ -1,0 +1,582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<link href="${base}/include/css/public/tzxx.css" rel="stylesheet"
+			type="text/css" />
+		<script src="${base}/include/js/validation.js"></script>
+		<script type="text/javascript">
+			 function setStr(){
+      var zt=document.getElementById("zt").value;
+      var letternote=document.getElementById("letternote").value;
+      var name=document.getElementById("name").value;
+      var linkadd=document.getElementById("linkadd").value;
+      var linktel=document.getElementById("linktel").value;
+      var linktel2=document.getElementById("linktel2").value;
+      var linkcode=document.getElementById("linkcode").value;
+      var linkmail=document.getElementById("linkmail").value;
+       zt=JTrim(zt);
+      letternote=JTrim(letternote);
+      name=JTrim(name);
+      linkadd=JTrim(linkadd);
+      linktel=JTrim(linktel);
+      linkcode=JTrim(linkcode);
+      linkmail=JTrim(linkmail);
+      linktel2=JTrim(linktel2);
+      document.getElementById("zt").value=zt;
+      document.getElementById("letternote").value=letternote;
+      document.getElementById("name").value=name;
+      document.getElementById("linkadd").value=linkadd;
+      document.getElementById("linktel").value=linktel;
+      document.getElementById("linktel2").valuelinktel2;
+      document.getElementById("linkcode").value=linkcode;
+      document.getElementById("linkmail").value=linkmail;
+     
+     
+    }
+     function doEncode(){//解码
+    	var zt=document.getElementById("zt").value;
+      var letternote=document.getElementById("letternote").value;
+      var name=document.getElementById("name").value;
+      var linkadd=document.getElementById("linkadd").value;
+      var linktel=document.getElementById("linktel").value;
+      var linktel2=document.getElementById("linktel2").value;
+      var linkcode=document.getElementById("linkcode").value;
+      var linkmail=document.getElementById("linkmail").value;
+       zt=htmlEncode(zt);
+      letternote=htmlEncode(letternote);
+      name=htmlEncode(name);
+      linkadd=htmlEncode(linkadd);
+      linktel=htmlEncode(linktel);
+      linkcode=htmlEncode(linkcode);
+      linkmail=htmlEncode(linkmail);
+      linktel2=htmlEncode(linktel2);
+      document.getElementById("zt").value=zt;
+      document.getElementById("letternote").value=letternote;
+      document.getElementById("name").value=name;
+      document.getElementById("linkadd").value=linkadd;
+      document.getElementById("linktel").value=linktel;
+      document.getElementById("linktel2").valuelinktel2;
+      document.getElementById("linkcode").value=linkcode;
+      document.getElementById("linkmail").value=linkmail;
+    }
+				//新建保存
+    function addSave(){  
+    setStr();
+     var linkmail=$("#linkmail").val();
+     var linktel=$("#linktel").val();
+     var linktel2=$("#linktel2").val();
+     var linkcode=$("#linkcode").val();
+     var linkmailreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+     var linktelreg =/((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;
+     var linktel2reg =/((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;
+     var linkcodereg =/^[1-9][0-9]{5}$/;
+    if($("#zt").val()==""||$("#zt").val()=="限制输入50字"){
+     $("#zt").val("限制输入50字");
+     Dialog.alert("标题不能为空！");
+    return false;
+    }else if($("#letternote").val()==""||$("#letternote").val()=="限制输入1000字"){
+    $("#letternote").val("限制输入1000字");
+     Dialog.alert("内容不能为空！");
+    return false;
+    }else if($("#name").val()==""||$("#name").val()=="限制输入20字"){
+    $("#name").val("限制输入20字");
+    Dialog.alert("姓名不能为空！");
+    return false;
+    }else if($("#linktel").val()==""){
+     Dialog.alert("手机号不能为空！");
+    return false;
+    }else if($("#linkmail").val()!=""&&!linkmailreg.test(linkmail)){
+     Dialog.alert("请输入一个有效的邮箱！");
+    return false;
+    }else if($("#linktel").val()!=""&&!linktelreg.test(linktel)){
+     Dialog.alert("请输入一个有效的手机号！");
+    return false;
+    }else if($("#linktel2").val()!=""&&!linktel2reg.test(linktel2)){
+     Dialog.alert("请输入一个有效的电话号码！");
+    return false;
+    }else if($("#linkcode").val()!=""&&!linkcodereg.test(linkcode)){
+     Dialog.alert("请输入一个有效的邮政编码！");
+    return false;
+    }
+    else if($("#letternote").val().length>1000){
+     Dialog.alert("内容最多可以输入1000字符");
+    return false;
+    }
+    else{
+    doEncode();
+		jQuery.ajax({
+			 	type: 'POST',
+    			url : "${base}/public/addsaveLetter" ,
+    			data : $("#form1").serialize(),
+    			success : function (res) { 
+    			
+    			Dialog.alert("添加成功,您的信件查询码是："+res+"请妥善保存！");
+    				
+    				return false;
+    			},
+    			fail : function(res) {
+    				Dialog.alert("系统错误?!");
+    			}
+    		}); }
+    			document.getElementById("zt").value="";
+     			document.getElementById("letternote").value="";
+      			document.getElementById("name").value="";
+     			document.getElementById("linkadd").value="";
+     			document.getElementById("linktel").value="";
+      			document.getElementById("linktel2").value="";
+     			document.getElementById("linkcode").value="";
+     			document.getElementById("linkmail").value="";
+    		
+	}
+			</script>
+		<script type="text/javascript">
+			 function setStr2(){
+			      var typedate=document.getElementById("typedate").value;
+			      document.getElementById("typedate").value=htmlEncode(JTrim(typedate));
+			      var searchpassword=document.getElementById("searchpassword").value;
+			      document.getElementById("searchpassword").value=htmlEncode(JTrim(searchpassword));
+			    }
+			   //查询
+		function searchLetter(){     
+			    setStr2();
+			    if($("#typedate").val()==""&&$("#searchpassword").val()==""){
+			     Dialog.alert("搜索条件查询码和标题不能都为空！");
+			    return false;
+			    }else{
+				    var searchpassword=$("#searchpassword").val();
+				    var typedate2=$("#typedate").val();
+				    var xz=$("#xz").val();
+				      window.open("${base}/public/searchLetter2?xz="+xz+"&searchpassword="
+							+ searchpassword + "&typedate="+typedate2, "_self", "");
+				}
+	           }
+			</script>
+	</head>
+
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<div class="top">
+			<div class="top_toplink fontV">
+				<span><a href="#">手机门户</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a
+					href="#">无障碍浏览</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">返回首页</a> </span>
+				<script language="JavaScript" type="text/JavaScript">
+	var day = "";
+	var month = "";
+	var ampm = "";
+	var ampmhour = "";
+	var myweekday = "";
+	var year = "";
+	mydate = new Date();
+	myweekday = mydate.getDay();
+	mymonth = mydate.getMonth() + 1;
+	myday = mydate.getDate();
+	myyear = mydate.getYear();
+	year = (myyear > 200) ? myyear : 1900 + myyear;
+	if (myweekday == 0)
+		weekday = " 星期日 ";
+	else if (myweekday == 1)
+		weekday = " 星期一 ";
+	else if (myweekday == 2)
+		weekday = " 星期二 ";
+	else if (myweekday == 3)
+		weekday = " 星期三 ";
+	else if (myweekday == 4)
+		weekday = " 星期四 ";
+	else if (myweekday == 5)
+		weekday = " 星期五 ";
+	else if (myweekday == 6)
+		weekday = " 星期六 ";
+	document.write(year + "年" + mymonth + "月" + myday + "日 " + weekday);
+</script>
+
+			</div>
+			<div class="top_banner">
+				<div class="top_logo">
+					<h1>
+						<a href="http://220.178.59.114:8099/" title="安徽省交通运输厅">安徽省交通运输厅</a>
+					</h1>
+				</div>
+				<div class="top_right">
+					<div class="top_tq">
+						<iframe allowtransparency="true" frameborder="0" width="180"
+							height="30" scrolling="no"
+							src="http://tianqi.2345.com/plugin/widget/index.htm?s=3&z=2&t=0&v=0&d=3&k=&f=1&q=1&e=1&a=1&c=54511&w=180&h=40"></iframe>
+					</div>
+					<div class="top_search">
+						<form>
+							<input type="text" name="searchword" value="" />
+							<button>
+								搜索
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tzxx_menu">
+			<ul>
+				#if($!xz==50)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15">厅长信箱</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15">厅长信箱</a>
+				</li>
+				#end #if($!xz==45)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15">在线咨询</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15">在线咨询</a>
+				</li>
+				#end #if($!xz==46)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15">建言献策</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15">建言献策</a>
+				</li>
+				#end #if($!xz==51)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15">在线投诉</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15">在线投诉</a>
+				</li>
+				#end #if($!xz==47)
+				<li class="dqzt">
+					<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15">在线举报</a>
+				</li>
+				#else
+				<li>
+					<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15">在线举报</a>
+				</li>
+				#end
+			</ul>
+		</div>
+		<div class="site_body1">
+			<table width="1004" border="0" align="center" cellpadding="0"
+				cellspacing="0">
+				<tr>
+					<td height="39" align="center"
+						background="${base}/images/public/wsdc_2.jpg">
+						<table width="98%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="20" align="left" class="jtxw_font14">
+									<img src="${base}/images/public/wsdc_3.jpg" width="14"
+										height="14" />
+								</td>
+								<td align="left" class="wsdc_12">
+									您当前的位置：
+									<a href="http://220.178.59.114:8099/" >首页</a> -&gt;
+									<a href="${base}/public" >网络问政</a> -&gt;
+									#if($!xz==50)
+									<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15" >厅长信箱</a>
+									#end #if($!xz==45)
+									<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15" >在线咨询</a>
+									#end #if($!xz==46)
+									<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15" >建言献策</a>
+									#end #if($!xz==51)
+									<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15" >在线投诉</a>
+									#end #if($!xz==47)
+									<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15" >在线举报</a>
+									#end
+
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				class="tzxx_top20 tzxx_bottom20">
+				<tr>
+					<td width="120" align="center" class="tzxx_rightline">
+						#if($!xz==50)
+						<img src="${base}/images/public/tzxx_04.jpg" width="99"
+							height="98" />
+						#end #if($!xz==45)
+						<img src="${base}/images/public/tzxx_08.jpg" width="99"
+							height="98" />
+						#end #if($!xz==46)
+						<img src="${base}/images/public/tzxx_09.jpg" width="99"
+							height="98" />
+						#end #if($!xz==51)
+						<img src="${base}/images/public/tzxx_10.jpg" width="99"
+							height="98" />
+						#end #if($!xz==47)
+						<img src="${base}/images/public/tzxx_11.jpg" width="99"
+							height="98" />
+						#end
+
+					</td>
+					<td width="20">
+						&nbsp;
+					</td>
+					<td class="tzxx_height24">
+						&nbsp;&nbsp;&nbsp;
+						欢迎您访问安徽交通门户网站!安徽交通的发展离不开你们的智慧和贡献，我们真诚地欢迎您通过来信等方式向我们反映问题，为安徽交通的发展提出建议，或对我们工作中的不足之处提出批评。为提高办事效率，明确责任，请按问题类别向我们反映。参与这项活动请您熟悉并遵守中华人民共和国国务院颁布的《
+						<a href="#"><font color="#FF0000">信访条例</font> </a>》和《
+						<a href="#"><font color="#FF0000">安徽省信访条例</font> </a>》。
+						<br />
+						&nbsp;&nbsp;&nbsp;
+						注：如您需要得到有关方面的答复，除意见征集以外的信件请务必留下真实姓名、E-MAIL地址和联系电话，便于有关部门向您了解具体的情况，妥善处理您反映的问题；未署真实姓名、电邮地址和联系电话的邮件，我们无法处理与反馈，敬请原谅!
+					</td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td width="213" align="center" valign="top" class="tzxx_bk">
+						<table width="100%" border="0" cellspacing="10" cellpadding="0">
+							<tr>
+								<td height="48" align="left"
+									background="${base}/images/public/tzxx_05.jpg" class="tzxx_an">
+									#if($!xz==50)
+									<a href="${base}/public/listLetter?xz=50&crPage=1&pageSize=15">查看信件列表</a> #end
+									#if($!xz==45)
+									<a href="${base}/public/listLetter?xz=45&crPage=1&pageSize=15">查看信件列表</a> #end
+									#if($!xz==46)
+									<a href="${base}/public/listLetter?xz=46&crPage=1&pageSize=15">查看信件列表</a> #end
+									#if($!xz==51)
+									<a href="${base}/public/listLetter?xz=51&crPage=1&pageSize=15">查看信件列表</a> #end
+									#if($!xz==47)
+									<a href="${base}/public/listLetter?xz=47&crPage=1&pageSize=15">查看信件列表</a> #end
+								</td>
+							</tr>
+						</table>
+						<table width="193" height="30" border="0" align="center"
+							cellpadding="0" cellspacing="0" class="tzxx_downline">
+							<tr>
+								<td width="20" align="center">
+									<img src="${base}/images/public/notice_dot.gif" width="5"
+										height="10" />
+								</td>
+								<td align="left" class="tzxx_font14">
+									<strong><font color="#0d7dd0">办件查询</font> </strong>
+								</td>
+							</tr>
+						</table>
+						<table width="100%" height="12" border="0" cellpadding="0"
+							cellspacing="0">
+							<tr>
+								<td></td>
+							</tr>
+						</table>
+						<form name='form2' id="form2" method='post'>
+							<table width="90%" border="0" align="center" cellpadding="0"
+								cellspacing="2">
+								<!--          <tr>-->
+								<!--            <td width="60" height="35" align="right">信件编号<br /></td>-->
+								<!--            <td align="left"><input name="textfield2" type="text" class="tzxx_input"  size="12" /></td>-->
+								<!--          </tr>-->
+								<tr>
+									<td height="35" align="right">
+										查询码
+									</td>
+									<td align="left">
+										<input name="searchpassword" id="searchpassword" type="text"
+											class="tzxx_input" size="12" maxlength="20" />
+										<input type="hidden" name="xz" id="xz" value="$!xz" />
+									</td>
+								</tr>
+								<tr>
+									<td height="35" align="right">
+										信件标题
+									</td>
+									<td align="left">
+										<input name="typedate" id="typedate" type="text"
+											class="tzxx_input" size="16" maxlength="50" />
+									</td>
+								</tr>
+								<tr>
+									<td height="35">
+										&nbsp;
+									</td>
+									<td align="left">
+										<input name="Submit3" type="button" class="btn_search"
+											value="查询" onclick="searchLetter();" />
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+					<td width="15" valign="top">
+						&nbsp;
+					</td>
+					<td align="center" valign="top" class="tzxx_bk">
+						<form name='form1' id="form1" method='post'>
+							<table width="95%" border="0" cellpadding="0" cellspacing="0"
+								class=" margin_bottom30">
+								<tr>
+									<td height="50" align="left">
+										<span class="zxft_18"> <img
+												src="${base}/images/public/zdft_2.jpg" width="6" height="11"
+												hspace="10" /> #if($!xz==50) 我要写信 #end #if($!xz==45) 我要咨询
+											#end #if($!xz==46) 我要献策 #end #if($!xz==51) 我要投诉 #end
+											#if($!xz==47) 我要举报 #end </span><span class="yjzj_12">[*为必填项]</span>
+									</td>
+								</tr>
+								<tr>
+									<td style="background:url(${base}/images/public/yjzj_7.jpg) repeat-x" height="6">
+										
+									</td>
+								</tr>
+								<tr>
+									<td align="center" bgcolor="#F0F0F0">
+										<table class="margin_top12" width="92%" border="0"
+											cellpadding="0" cellspacing="0" bgcolor="#F0F0F0">
+											<tr>
+												<td width="53" height="35" align="right" class="zxft_12wz">
+													<strong>标题&nbsp; </strong>
+												</td>
+												<td width="299" align="left">
+													<input name="zt" id="zt" type="text" class="yjzj_input"
+														size="45" maxlength="50"
+														onclick="if(this.value=='限制输入50字')this.value='';"
+														value="限制输入50字" />
+													<span class="yjzj_12">* </span>
+												</td>
+												<td colspan="2" align="left">
+													内容是否公开
+													<select name="opentype" id="opentype">
+														<option value="0">
+															是
+														</option>
+														<option value="1">
+															否
+														</option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td height="35" align="right" valign="top" class="zxft_12wz">
+													<strong>内容&nbsp; </strong>
+												</td>
+												<td colspan="3" align="left" valign="top">
+													<textarea name="letternote" id="letternote" cols="60"
+														rows="5" class="yjzj_input" style="width: 450px;"
+														onclick="if(this.value=='限制输入1000字')this.value='';"
+														onkeyup="checkLength(this,200);">限制输入1000字</textarea>
+													<span class="yjzj_12">*</span><span class="zxft_12wz"
+														id="notespan"></span>
+
+												</td>
+											</tr>
+											<tr>
+												<td height="35" align="right" class="zxft_12wz">
+													<strong>姓名&nbsp; </strong>
+												</td>
+												<td align="left">
+													<input name="name" id="name" type="text" class="yjzj_input"
+														size="20" maxlength="50"
+														onclick="if(this.value=='限制输入20字')this.value='';"
+														value="限制输入20字" />
+													<span class="yjzj_12">*</span>
+												</td>
+												<td width="61" align="right">
+													<strong>联系电话&nbsp; </strong>
+												</td>
+												<td width="261" align="left">
+													<input name="linktel2" id="linktel2" type="text"
+														class="yjzj_input" size="20" />
+												</td>
+											</tr>
+											<tr>
+												<td height="35" align="right" class="zxft_12wz">
+													<strong>地址&nbsp; </strong>
+												</td>
+												<td align="left">
+													<input name="linkadd" id="linkadd" type="text"
+														class="yjzj_input" size="35" />
+												</td>
+												<td align="right">
+													<strong>邮政编码&nbsp; </strong>
+												</td>
+												<td align="left">
+													<input name="linkcode" id="linkcode" type="text"
+														class="yjzj_input" size="20" />
+												</td>
+											</tr>
+											<tr>
+												<td height="35" align="right" valign="top" class="zxft_12wz">
+													<strong>手机&nbsp; </strong>
+												</td>
+												<td align="left">
+													<input name="linktel" id="linktel" type="text"
+														class="yjzj_input" size="20" />
+													<span class="yjzj_12">*</span>
+												</td>
+												<td align="right">
+													<strong>电子邮箱&nbsp; </strong>
+												</td>
+												<td align="left">
+													<input name="linkmail" id="linkmail" type="text"
+														class="yjzj_input" size="20" />
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<input type="hidden" name="xz" id="xz" value="$!xz" />
+													<input type="hidden" name="type" id="type" value="43" />
+												</td>
+												<td align="left"></td>
+												<td align="left">
+													&nbsp;
+												</td>
+												<td align="left">
+													&nbsp;
+												</td>
+											</tr>
+											<tr>
+												<td height="20" colspan="4" align="center">
+													&nbsp;
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td height="50" align="center" valign="bottom">
+										<span class="xqye_14"> <input name="Submit"
+												type="button" class="btn_search" value="提交"
+												onclick="addSave();" /> <input name="Submit2" type="reset"
+												class="btn_search" value="重置" /> </span>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="foot_text1"></div>
+		<div class="foot">
+			<div class="foot_left">
+				<a href="#">网站地图</a> |
+				<a href="#">免责声明</a> |
+				<a href="#">联系我们</a> |
+				<a href="#">在线信息报送</a>
+			</div>
+			<div class="foot_right fontV">
+				安徽省交通运输厅版权所有 地址:合肥市屯溪路528号金环大厦 电话：0551-63623561
+				<br />
+				Email:xxzx@ahjt.gov.cn Fax:0551-63623561 通用网址:安徽交通 皖ICP备07007891号
+			</div>
+			<div class="clear"></div>
+		</div>
+	</body>
+</html>

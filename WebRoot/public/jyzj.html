@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$!app_name</title>
+
+		<script type='text/javascript'>
+	var CONTEXTPATH = '${base}';
+</script>
+		<script src="${base}/include/js/main.js"></script>
+		<script src="${base}/include/js/string.js"></script>
+		<!-- 分页  注意顺序 -->
+		<link href="${base}/include/css/themes/gray/easyui.css"
+			rel="stylesheet" type="text/css" />
+		<script src="${base}/include/js/jquery.easyui.min.js"></script>
+		<script type="text/javascript"
+			src="${base}/include/js/public/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="${base}/include/js/public/hits.js"></script>
+		<link href="${base}/include/css/public/jtxw.css" rel="stylesheet"
+			type="text/css" />
+		<script type="text/javascript">
+	function setStr() {
+
+		var username = document.getElementById("username").value;
+		var note = document.getElementById("note").value;
+		var ext3 = document.getElementById("ext3").value;
+		username = JTrim(username);
+		note = JTrim(note);
+		ext3 = JTrim(ext3);
+		document.getElementById("username").value = username;
+		document.getElementById("note").value = note;
+		document.getElementById("ext3").value = ext3;
+
+	}
+	function doEncode() {//解码
+		var username = document.getElementById("username").value;
+		var note = document.getElementById("note").value;
+		var ext3 = document.getElementById("ext3").value;
+		username = htmlEncode(username);
+		note = htmlEncode(note);
+		ext3 = htmlEncode(ext3);
+		document.getElementById("username").value = username;
+		document.getElementById("note").value = note;
+		document.getElementById("ext3").value = ext3;
+	}
+	//新建保存
+	function addSave() {
+		var linktel = $("#ext").val();
+		var linkmail = $("#ext2").val();
+		var linkmailreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		var linktelreg = /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/;
+		setStr();
+		if ($("#username").val() == "" || $("#username").val() == "限制输入20字") {
+			$("#username").val("");
+			Dialog.alert("姓名不能为空！");
+			return false;
+		} else if ($("#note").val() == "" || $("#note").val() == "限制输入500字") {
+			$("#note").val("");
+			Dialog.alert("内容不能为空！");
+			return false;
+		} else if ($("#ext3").val() == "" || $("#ext3").val() == "限制输入50字") {
+			$("#ext3").val("");
+			Dialog.alert("标题不能为空！");
+			return false;
+		} else if ($("#ext").val() != "" && !linktelreg.test(linktel)) {
+			Dialog.alert("请输入一个有效的电话号！");
+			return false;
+		} else if ($("#ext2").val() != "" && !linkmailreg.test(linkmail)) {
+			Dialog.alert("请输入一个有效的邮箱！");
+			return false;
+		} else {
+			doEncode();
+			jQuery.ajax( {
+				type : 'POST',
+				url : "${base}/public/addsave",
+				data : $("#form1").serialize(),
+				success : function(res) {
+					if (res == "true") {
+						Dialog.alert("添加成功！");
+						$("#username").val("");
+						$("#note").val("");
+						$("#ext3").val("");
+					} else {
+						Dialog.alert("添加失败！");
+					}
+
+					return false;
+				},
+				fail : function(res) {
+					Dialog.alert("系统错误?!");
+				}
+			});
+		}
+	}
+</script>
+	</head>
+	<body>
+
+		#parse("public/top.html")
+		<div class="site_body">
+			<div class="site_postion">
+				<div class="postion_icon ">
+					您当前的位置：
+					<a href="http://220.178.59.114:8099/" >首页 </a>-&gt;
+					<a href="${base}/public" >网络问政</a> -&gt;
+					<a href="${base}/public/jyzj" >意见征集</a>
+				</div>
+			</div>
+			<div class="site_nr">
+				<table width="100%" border="0" align="center" cellpadding="0"
+					cellspacing="0">
+					<tr>
+						<td align="left" valign="top">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+									<td height="290" align="center" valign="top" class="table">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="left">
+													<table width="205" height="32" border="0" cellpadding="0"
+														cellspacing="0">
+														<tr>
+															<td align="right"
+																background="${base}/images/public/wsdc_5.jpg">
+																<table width="160" border="0" cellspacing="0"
+																	cellpadding="0">
+																	<tr>
+																		<td align="left" class="wsdc_18">
+																			正在征集
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+
+										</table>
+										<table width="94%" class="margin_top12 margin_bottom10"
+											border="0" cellpadding="0" cellspacing="0">
+											<tr>
+												<td height="307" valign="top">
+													#set ($i=1) #foreach($obj in $!t_solicitations)
+													<table width="100%" height="141" border="0" cellspacing="0"
+														cellpadding="0">
+														<tr>
+															<td width="76" height="35" align="left" nowrap="nowrap">
+																<strong><span class="xqye_14">征集主题：</span> </strong>
+															</td>
+															<td colspan="2" align="left" nowrap="nowrap">
+																<a href="${base}/public/XQdetail?id=$obj.id"
+																	target="_blank" class="blue font14"><strong>$obj.title</strong>
+																</a>
+															</td>
+														</tr>
+														<tr>
+															<td height="35" align="left" valign="top" nowrap="nowrap">
+																<strong><span class="xqye_14">征集摘要：</span> </strong>
+															</td>
+															<td colspan="2" align="left" class="wsdc_12">
+																$!StringUtil.substr($obj.summary,130)
+																<span class="yjzj_12"><a
+																	href="${base}/public/XQdetail?id=$obj.id" class="wsdc"><font
+																		color="#FF0000">&lt;更多&gt;</font> </a> </span>
+															</td>
+														</tr>
+														<tr>
+															<td height="35" align="left" nowrap="nowrap">
+																<strong><span class="xqye_14">征集时间：</span> </strong>
+															</td>
+															<td width="497" align="left" nowrap="nowrap">
+																$obj.btime~$obj.etime
+																<a href="dcjg_2.html"></a>
+															</td>
+															<td width="85" align="center" nowrap="nowrap">
+																<a href="${base}/public/XQdetail?id=$obj.id"
+																	target="_blank"><img
+																		src="${base}/images/public/wsdc_6.jpg" width="70"
+																		height="23" border="0" /> </a>
+															</td>
+														</tr>
+													</table>
+
+													#if($i==1) #set ($i=2)
+													<table width="100%" border="0" cellpadding="0"
+														cellspacing="0">
+														<tr>
+															<td height="25" align="center" class="jtxw_line">
+																&nbsp;
+
+															</td>
+														</tr>
+													</table>
+													#end #end
+
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0"
+								class="margin_top12">
+								<tr>
+									<td height="260" align="center" valign="top" class="table">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="left">
+													<table width="205" height="32" border="0" cellpadding="0"
+														cellspacing="0">
+														<tr>
+															<td align="right"
+																background="${base}/images/public/wsdc_5.jpg">
+																<table width="160" border="0" cellspacing="0"
+																	cellpadding="0">
+																	<tr>
+																		<td align="left" class="wsdc_18">
+																			历史征集
+																		</td>
+																	</tr>
+																</table>
+															</td>
+														</tr>
+													</table>
+												</td>
+											</tr>
+										</table>
+										<table width="96%" border="0" cellspacing="0"
+											class="margin_top12">
+											<tr>
+												<td width="495" height="34" align="left"
+													background="${base}/images/public/wsdc_7.jpg"
+													class="xqye_14">
+													<strong>&nbsp;征集主题</strong>
+												</td>
+												<td width="90" height="34" align="center"
+													background="${base}/images/public/wsdc_7.jpg">
+													<span class="xqye_14"><strong>征集时间</strong> </span>
+												</td>
+												<td width="114" align="center"
+													background="${base}/images/public/wsdc_7.jpg"
+													class="xqye_14">
+													<strong> 结果公示</strong>
+												</td>
+											</tr>
+											<tr>
+												<td colspan="3" align="center">
+													<table width="100%" border="0" cellspacing="0"
+														cellpadding="0" class="tabletdpad4">
+														#foreach($obj2 in $!t_solicitations2)
+														<tr>
+															<td  width="515"  height="20" align="left">
+																<a href="${base}/public/XQdetail?id=$obj.id"
+																	class="wsdc">· $!StringUtil.substr($obj2.title,37)</a>
+															</td>
+															<td width="80" height="20" align="center"
+																class="wsdc_12">
+																$obj2.btime
+															</td>
+															<td height="20" align="center" width="114">
+																<a
+																	href="${base}/public/JGdetail?id=$obj2.id&amp;crPage=1&amp;pageSize=10"><font
+																	color="#FF0000" style="font-size: 12px">[查看结果]</font> </a>
+															</td>
+														</tr>
+														#end
+													</table>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td width="12">
+							&nbsp;
+						</td>
+						<td width="235" align="center" valign="top" bgcolor="#f0f0f0"
+							class="yjzj_table">
+							<table width="100%" border="0" cellspacing="0" cellpadding="0">
+								<tr>
+									<td height="44" align="center" bgcolor="#0076CA"
+										class="wsdc_18">
+										参与征集
+									</td>
+								</tr>
+								<tr>
+									<td align="center" valign="top">
+										<img src="${base}/images/public/zxft_6.jpg" width="27"
+											height="13" />
+									</td>
+								</tr>
+							</table>
+							<table width="92%" class="margin_top12" border="0" align="center"
+								cellpadding="0" cellspacing="0">
+								<tr>
+									<td align="left" class="font_yjzj">
+										真诚地欢迎您为我们的工作提出建 议和意见， 我们向您表示衷心感谢。
+										<br />
+										为便于我们对您提出的建议、意见作进一步了解和答复， 请您详细填写真实姓名、Email地址、联系电话及意见等信息！
+									</td>
+								</tr>
+							</table>
+							<form name='form1' id="form1" method='post'>
+								<table width="94%" class="margin_top12" border="0"
+									cellspacing="0" cellpadding="0">
+									<tr>
+										<td width="21%" height="25" align="center">
+											<strong>主题</strong>
+										</td>
+										<td width="79%" align="left">
+											<select name="sid" name="sid" class="wsdc_12"
+												style="width: 160px;">
+
+												#foreach($obj in $!t_solicitations)
+												<option value="$obj.id">
+													$!StringUtil.substr($obj.title,12)
+												</option>
+												#end
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center">
+											<strong>姓名</strong>
+										</td>
+										<td align="left">
+											<input name="username" id=username type="text"
+												class="yjzj_input" style="width: 100px;" maxlength="20"
+												onclick="if(this.value=='限制输入20字')this.value='';"
+												value="限制输入20字" />
+											<span class="yjzj_12">*</span>
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center">
+											<strong>公开</strong>
+										</td>
+										<td align="left">
+											<select name="ispublic" id="ispublic" style="width: 60px;">
+												<option value="0">
+													否
+												</option>
+												<option value="1">
+													是
+												</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center">
+											<strong>电话</strong>
+										</td>
+										<td align="left">
+											<input name="ext" id="ext" type="text" class="yjzj_input"
+												style="width: 120px;" maxlength="14" />
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center">
+											<strong>邮箱</strong>
+										</td>
+										<td align="left">
+											<input name="ext2" id="ext2" type="text" class="yjzj_input"
+												style="width: 120px;" maxlength="50" />
+											<input name="auditstatus" id="auditstatus" type="hidden"
+												value="1" />
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center">
+											<strong>标题</strong>
+										</td>
+										<td align="left">
+											<input name="ext3" id="ext3" style="width: 150px;"
+												type="text" class="yjzj_input" maxlength="50"
+												onclick="if(this.value=='限制输入50字')this.value='';"
+												value="限制输入50字" />
+											<span class="yjzj_12">* </span>
+										</td>
+									</tr>
+									<tr>
+										<td height="25" align="center" valign="top">
+											<strong>意见</strong>
+										</td>
+										<td align="left" valign="top">
+											<textarea name="note" id=note class="yjzj_input"
+												style="width: 150px; height: 120px;"
+												onclick="if(this.value=='限制输入500字')this.value='';">限制输入500字</textarea>
+											<span class="yjzj_12">* </span>
+										</td>
+									</tr>
+									<tr>
+										<td height="25">
+											&nbsp;
+										</td>
+										<td height="35" align="left">
+											<span class="xqye_14"> <input name="botton"
+													type="button" class="btn_search" value="提交"
+													onclick="addSave();" /> <input name="botton2" type="reset"
+													class="btn_search" value="重置" /> </span>
+										</td>
+									</tr>
+								</table>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		#parse("public/foot.html")
+
+	</body>
+</html>
