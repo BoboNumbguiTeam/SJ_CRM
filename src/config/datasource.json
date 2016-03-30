@@ -5,12 +5,12 @@ var ioc = {
 			depose:"close"
 		},
 		fields:{
-//			url:"jdbc:mysql://120.209.40.15:3306/nbglxt?useUnicode=true&characterEncoding=utf8",
-			url:"jdbc:mysql://localhost:3306/nbglxt?useUnicode=true&characterEncoding=utf8",
-			username:"root",
-//			username:"ss3000c",
-//			password:"ss3000c",
-			password:"pass",
+			url:"jdbc:mysql://120.209.40.15:3306/nbglxt?useUnicode=true&characterEncoding=utf8",
+//			url:"jdbc:mysql://192.168.0.26:3306/sj_crm?useUnicode=true&characterEncoding=utf8",
+//			username:"root",
+			username:"ss3000c",
+			password:"ss3000c",
+//			password:"pass",
 			maxActive:301,
 			testWhileIdle:true,
 			validationQuery:'SELECT COUNT(*) FROM SYS_DBTEST',
