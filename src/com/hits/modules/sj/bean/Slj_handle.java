@@ -14,9 +14,6 @@ public class Slj_handle
 {
 	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT SLJ_HANDLE_S.nextval FROM dual")
-	})
 	private int id;
 	@Column
 	private String letterid;

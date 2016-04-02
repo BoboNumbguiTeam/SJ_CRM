@@ -1,11 +1,14 @@
 package com.hits.modules.sj;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.apache.commons.lang.StringUtils;
 
+import com.hits.common.action.BaseAction;
+import com.hits.common.filter.GlobalsFilter;
+import com.hits.common.filter.UserLoginFilter;
+
+import com.hits.modules.sj.bean.Slj_zhuanban;
+import net.sf.json.JSONObject;
 import org.nutz.dao.*;
 import org.nutz.dao.sql.Criteria;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.At;
@@ -14,11 +17,6 @@ import org.nutz.mvc.annotation.Filters;
 import org.nutz.mvc.annotation.Ok;
 import org.nutz.mvc.annotation.Param; 
 
-import cn.xuetang.common.action.BaseAction;
-import cn.xuetang.common.filter.GlobalsFilter;
-import cn.xuetang.common.filter.UserLoginFilter;
-
-import cn.xuetang.modules.sj.bean.Slj_zhuanban;
 
 /**
  * @author Numbgui
@@ -80,12 +78,12 @@ public class Slj_zhuanbanAction extends BaseAction {
 	
 	@At
 	public boolean deleteIds(@Param("ids") Integer[] ids) {
-		return daoCtl.delete(dao, Slj_zhuanban.class, Cnd.where("id", "in", ids)) > 0;
+		return dao.clear("Slj_zhuanban", Cnd.where("id", "in", ids)) > 0;
 	}
 	
 	@At
 	@Ok("raw")
-	public String list(@Param("page") int curPage, @Param("rows") int pageSize){
+	public JSONObject list(@Param("page") int curPage, @Param("rows") int pageSize){
 		Criteria cri = Cnd.cri();
 		cri.where().and("1","=",1);
 		cri.getOrderBy().desc("id");

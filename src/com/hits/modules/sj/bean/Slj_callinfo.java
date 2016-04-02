@@ -14,9 +14,6 @@ public class Slj_callinfo
 {
 	@Column
 	@Id
-	@Prev({
-		@SQL(db = DB.ORACLE, value="SELECT SLJ_CALLINFO_S.nextval FROM dual")
-	})
 	private int id;
 	@Column
 	private String reason;
