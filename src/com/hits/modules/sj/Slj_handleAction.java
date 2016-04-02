@@ -29,13 +29,11 @@ public class Slj_handleAction extends BaseAction {
 	protected Dao dao;
 
 	@At("")
-	@Ok("vm:template.private.sj.Slj_handle")
 	public void index(@Param("sys_menu") String sys_menu,HttpServletRequest req) {
 		req.setAttribute("sys_menu",sys_menu);
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_handleAdd")
 	public void toadd() {
 	
 	}
@@ -59,7 +57,6 @@ public class Slj_handleAction extends BaseAction {
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_handleUpdate")
 	public Slj_handle toupdate(@Param("id") int id, HttpServletRequest req) {
 		return daoCtl.detailById(dao, Slj_handle.class, id);//html:obj
 	}

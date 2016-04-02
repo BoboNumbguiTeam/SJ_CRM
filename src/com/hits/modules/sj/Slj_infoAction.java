@@ -30,13 +30,11 @@ public class Slj_infoAction extends BaseAction {
 	protected Dao dao;
 
 	@At("")
-	@Ok("vm:template.private.sj.Slj_info")
 	public void index(@Param("sys_menu") String sys_menu,HttpServletRequest req) {
 		req.setAttribute("sys_menu",sys_menu);
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_infoAdd")
 	public void toadd() {
 	
 	}

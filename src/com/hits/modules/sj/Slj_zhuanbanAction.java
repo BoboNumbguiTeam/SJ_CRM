@@ -31,13 +31,11 @@ public class Slj_zhuanbanAction extends BaseAction {
 	protected Dao dao;
 
 	@At("")
-	@Ok("vm:template.private.sj.Slj_zhuanban")
 	public void index(@Param("sys_menu") String sys_menu,HttpServletRequest req) {
 		req.setAttribute("sys_menu",sys_menu);
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_zhuanbanAdd")
 	public void toadd() {
 	
 	}
@@ -61,7 +59,6 @@ public class Slj_zhuanbanAction extends BaseAction {
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_zhuanbanUpdate")
 	public Slj_zhuanban toupdate(@Param("id") int id, HttpServletRequest req) {
 		return daoCtl.detailById(dao, Slj_zhuanban.class, id);//html:obj
 	}

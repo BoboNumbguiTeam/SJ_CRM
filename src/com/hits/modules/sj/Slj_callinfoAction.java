@@ -30,13 +30,11 @@ public class Slj_callinfoAction extends BaseAction {
 	protected Dao dao;
 
 	@At("")
-	@Ok("vm:template.private.sj.Slj_callinfo")
 	public void index(@Param("sys_menu") String sys_menu,HttpServletRequest req) {
 		req.setAttribute("sys_menu",sys_menu);
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_callinfoAdd")
 	public void toadd() {
 	
 	}
@@ -60,7 +58,6 @@ public class Slj_callinfoAction extends BaseAction {
 	}
 	
 	@At
-	@Ok("vm:template.private.sj.Slj_callinfoUpdate")
 	public Slj_callinfo toupdate(@Param("id") int id, HttpServletRequest req) {
 		return daoCtl.detailById(dao, Slj_callinfo.class, id);//html:obj
 	}
